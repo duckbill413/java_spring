@@ -1,5 +1,0 @@
-package ch02;
-@FunctionalInterface
-public interface Stringconcat {
-	
-}

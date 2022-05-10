@@ -1,8 +1,0 @@
-package ch02;
-
-public class RamdaFunc {
-	public static void main(String[]args) {
-		Add add = (x, y)->{return x+y;}; // 람다식 표현
-		System.out.println(add.add(2,  3));	
-	}
-}

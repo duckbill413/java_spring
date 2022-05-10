@@ -1,6 +1,0 @@
-package linkedList;
-
-public class DBLinkedList<T> implements LinkedList<T>
-{
-
-}
