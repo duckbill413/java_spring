@@ -1,0 +1,7 @@
+package ch02;
+
+public class MyNumberTest {
+	public static void main(String args[]) {
+		MyNumber myNumber = (x, y)-> x>y? x: y;
+	}
+}

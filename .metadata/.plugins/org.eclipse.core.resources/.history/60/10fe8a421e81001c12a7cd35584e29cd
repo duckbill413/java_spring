@@ -1,0 +1,8 @@
+package ch04;
+
+public class StringConcatTest {
+	public static void main(String[]args) {
+		StringConcatImpl strImpl = new StringConcatImpl();
+		strImpl.makeString("Hello", "World");
+	}
+}

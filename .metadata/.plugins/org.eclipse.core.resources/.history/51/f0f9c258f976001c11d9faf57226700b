@@ -1,0 +1,17 @@
+package linkedList;
+
+public class DBLinkedList {
+	private Node head;
+	private Node tail;
+	private Node cur;
+	int numOfData;
+	
+	public DBLinkedList() {
+		head = new Node();
+		tail = null;
+		cur = null;
+		numOfData = 0;
+	}
+	
+	
+}

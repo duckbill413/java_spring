@@ -1,0 +1,114 @@
+package linkedList;
+
+public class DBLinkedList<T> implements LinkedList<T>{
+	private Node<T> head;
+	private Node<T> tail;
+	private int size;
+	
+	public DBLinkedList() {
+		this.head = null;
+		this.tail = null;
+		this.size = 0;
+	}
+	
+	private Node<T> search(int index){
+		if(index <0 || index >=size)
+			throw new IndexOutOfBoundsException();
+		
+		if(index > size / 2) {
+			Node<T> fi = tail;
+			for(int i=size-1; i>index; i--) {
+				fi = fi.prev;
+			}
+			return fi;
+		}
+		else
+		{
+			Node<T> fi = head;
+			for(int i=0; i<index; i++) {
+				fi = fi.next;
+			}
+			return fi;
+		}
+	}
+	
+	public void addFirst(T value) {
+		Node<T> newNode = new Node<T>(value);
+		newNode.next = head;
+		
+		if(head!=null)
+			head.prev = newNode;
+		head = newNode;
+		size++;
+		
+		if(head.next==null) {
+			tail = head;
+		}
+	}
+	@Override
+	public boolean add(T value) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void add(int index, T value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public T remove(int index) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean remove(Object value) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public T get(int index) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void set(int index, T value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean contains(Object value) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int indexOf(Object value) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int size() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void clear() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}
