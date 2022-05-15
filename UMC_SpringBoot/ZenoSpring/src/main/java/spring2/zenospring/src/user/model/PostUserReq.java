@@ -1,15 +1,16 @@
-package spring2.zenospring.model;
+package spring2.zenospring.src.user.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Setter
 @Getter
+@Setter
 @AllArgsConstructor
 public class PostUserReq {
-    private String ID;
-    private String userName;
-    private String password;
+    private String name;
+    private String nickName;
+    private String phone;
     private String email;
+    private String password;
 }

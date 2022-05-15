@@ -1,0 +1,22 @@
+### 이메일과 비밀번호를 이용한 회원조회
+GET localhost:8080/users/userInfo?Email=zebra@gmail.com&Pwd=zebra333
+
+### 회원번호를 이용한 회원조회
+GET localhost:8080/users/2
+
+### 모든 회원 조회
+GET http://localhost:8080/users/getAll
+
+### 회원 등록
+POST http://localhost:8080/users/
+Content-Type: application/json
+
+{
+  "name": "김한나",
+  "nickName": "fox",
+  "email": "fox@gmail.com",
+  "password": "fox777",
+  "phone": "010-7777-8888",
+  "profileImgUrl": "foxImg",
+  "introduce": "여우같이 앙큼하게"
+}

@@ -1,0 +1,176 @@
+package spring2.zenoinstagram.src.user;
+
+import com.fasterxml.jackson.databind.ser.Serializers;
+import spring2.zenoinstagram.config.BaseResponse;
+import spring2.zenoinstagram.config.BaseException;
+import spring2.zenoinstagram.src.user.model.*;
+import spring2.zenoinstagram.utils.JwtService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static spring2.zenoinstagram.config.BaseResponseStatus.*;
+import static spring2.zenoinstagram.utils.ValidationRegex.isRegexEmail;
+import static spring2.zenoinstagram.utils.ValidationRegex.isRegexPassword;
+
+@RestController
+@RequestMapping("/users")
+public class UserController {
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Autowired
+    private final UserProvider userProvider;
+    @Autowired
+    private final UserService userService;
+    @Autowired
+    private final JwtService jwtService;
+
+
+    public UserController(UserProvider userProvider, UserService userService, JwtService jwtService) {
+        this.userProvider = userProvider;
+        this.userService = userService;
+        this.jwtService = jwtService;
+    }
+
+
+    /**
+     * 회원 조회 API
+     * [GET] /users
+     * 이메일과 비밀번호를 이용하여 회원조회
+     * [GET] /users/userInfo?Email=?&Pwd=?
+     * @param  email, pwd
+     * @return BaseResponse<GetUserRes>
+     */
+//    Query String
+    @ResponseBody
+    @GetMapping("/userInfo") // (GET) 127.0.0.1:8080/users?Email=&Pwd=
+    public BaseResponse<GetUserRes> getUsers(@RequestParam(value = "Email", required = true) String email, @RequestParam(value = "Pwd") String pwd) {
+        try {
+            // TODO: email 관련한 짧은 validation 예시입니다. 그 외 더 부가적으로 추가해주세요!
+            if (email.length() == 0) {
+                return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
+            }
+            // 이메일 정규표현
+            if (!isRegexEmail(email)) {
+                return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+            }
+            // 비밀번호 확인
+            if(userProvider.checkPassword(email, pwd)==0)
+                return new BaseResponse<>(FAILED_TO_LOGIN);
+
+
+            GetUserRes getUsersRes = userProvider.getUsersByEmail(email);
+            return new BaseResponse<>(getUsersRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 모든 회원 조회 API
+     * [GET] /users/getAll
+     *
+     * @return BaseResponse<List<GetUserRes>>
+     */
+    @ResponseBody
+    @GetMapping("/getAll")
+    public BaseResponse<List<GetUserRes>> getAllUsers(){
+        System.out.println("Get All User");
+        try{
+            List<GetUserRes> getAllUsers = userProvider.getAllUsers();
+
+            return new BaseResponse<List<GetUserRes>>(getAllUsers);
+        } catch (BaseException e){
+            return new BaseResponse<>((e.getStatus()));
+        }
+    }
+
+    /**
+     * 회원 조회 API
+     * [GET] /users/{userIdx}
+     * userIdx를 이용한 회원조회
+     * @param userIdx
+     * @return BaseResponse
+     */
+    @ResponseBody
+    @GetMapping("/{userIdx}") // (GET) 127.0.0.1:8080/users/:userIdx
+    public BaseResponse<GetUserRes> getUserByIdx(@PathVariable("userIdx") int userIdx) {
+        System.out.println("Get User"+userIdx);
+        try {
+            GetUserRes getUsersRes = userProvider.getUsersByIdx(userIdx);
+            return new BaseResponse<>(getUsersRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 회원가입 API
+     * [POST] /users
+     *
+     * @return BaseResponse<PostUserRes>
+     */
+    // Body
+    @ResponseBody
+    @PostMapping("") // (POST) 127.0.0.1:8080/users
+    public BaseResponse<PostUserRes> createUser(@RequestBody PostUserReq postUserReq) {
+        if (postUserReq.getEmail() == null) {
+            return new BaseResponse<>(POST_USERS_EMPTY_EMAIL);
+        }
+        // 이메일 정규표현
+        if (!isRegexEmail(postUserReq.getEmail())) {
+            return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
+        }
+        if (postUserReq.getName()==null)
+            return new BaseResponse<>(POST_USERS_EMPTY_NAME);
+        if (postUserReq.getNickName()==null)
+            return new BaseResponse<>(POST_USERS_EMPTY_NICKNAME);
+        if (postUserReq.getPassword()==null)
+            return new BaseResponse<>(POST_USERS_EMPTY_PASSWORD);
+        if (postUserReq.getPhone()==null)
+            return new BaseResponse<>(POST_USERS_EMPTY_PHONE);
+        // 전화번호 정규표현
+        if (!isRegexPassword(postUserReq.getPhone()))
+            return new BaseResponse<>(POST_USERS_INVALID_PHONE);
+
+        try {
+            PostUserRes postUserRes = userService.createUser(postUserReq);
+            return new BaseResponse<>(postUserRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+    /**
+     * 유저정보변경 API
+     * [PATCH] /users/:userIdx
+     *
+     * @return BaseResponse<String>
+     */
+    @ResponseBody
+    @PatchMapping("/{userIdx}") // (PATCH) 127.0.0.1:9000/users/:userIdx
+    public BaseResponse<String> modifyUserName(@PathVariable("userIdx") int userIdx, @RequestBody User user) {
+        try {
+            /* TODO: jwt는 다음주차에서 배울 내용입니다!
+            jwt에서 idx 추출.
+            int userIdxByJwt = jwtService.getUserIdx();
+            userIdx와 접근한 유저가 같은지 확인
+            if(userIdx != userIdxByJwt){
+                return new BaseResponse<>(INVALID_USER_JWT);
+            }
+            */
+
+            PatchUserReq patchUserReq = new PatchUserReq(userIdx, user.getNickName());
+            userService.modifyUserName(patchUserReq);
+
+            String result = "";
+            return new BaseResponse<>(result);
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+    }
+
+}

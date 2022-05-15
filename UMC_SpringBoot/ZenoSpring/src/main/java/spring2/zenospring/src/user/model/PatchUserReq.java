@@ -1,4 +1,4 @@
-package spring2.zenospring.model;
+package spring2.zenospring.src.user.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class PostUserRes {
+public class PatchUserReq {
     private int userIdx;
+    private String nickName;
 }
