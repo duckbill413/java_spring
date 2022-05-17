@@ -2,9 +2,7 @@ package spring2.zenoinstagram.src.user;
 
 import spring2.zenoinstagram.config.BaseException;
 
-import spring2.zenoinstagram.src.user.model.PatchUserReq;
-import spring2.zenoinstagram.src.user.model.PostUserReq;
-import spring2.zenoinstagram.src.user.model.PostUserRes;
+import spring2.zenoinstagram.src.user.model.*;
 import spring2.zenoinstagram.utils.JwtService;
 import spring2.zenoinstagram.utils.SHA256;
 
@@ -37,21 +35,15 @@ public class UserService {
         // 이메일 중복 확인
         if (userProvider.checkEmail(postUserReq.getEmail()) == 1) {
             throw new BaseException(POST_USERS_EXISTS_EMAIL);
-        // 닉네임 중복 확인
-        }if (userProvider.checkNickName(postUserReq.getNickName()) == 1) {
+            // 닉네임 중복 확인
+        }
+        if (userProvider.checkNickName(postUserReq.getNickName()) == 1) {
             throw new BaseException(POST_USERS_EXISTS_NICKNAME);
-        // 전화번호 중복 확인
-        }if (userProvider.checkPhone(postUserReq.getPhone()) == 1) {
+            // 전화번호 중복 확인
+        }
+        if (userProvider.checkPhone(postUserReq.getPhone()) == 1) {
             throw new BaseException(POST_USERS_EXISTS_PHONE);
         }
-
-        // 필수요소가 아닌 요소의 인자 초기화
-        if (postUserReq.getProfileImgUrl()==null)
-            postUserReq.setProfileImgUrl(null);
-        if (postUserReq.getWebsite()==null)
-            postUserReq.setWebsite(null);
-        if (postUserReq.getIntroduce()==null)
-            postUserReq.setIntroduce(null);
 
         String pwd;
         try {
@@ -83,4 +75,30 @@ public class UserService {
         }
     }
 
+    public DelResUserRes deleteUser(DelResUserReq delResUserReq, String order) throws BaseException {
+        // 변경하려는 상태가 현재와 같은지 확인
+        String nowUserStatus;
+        try {
+            nowUserStatus = userProvider.checkStatus(delResUserReq.getEmail());
+            if (nowUserStatus.equals("ACTIVE"))
+                nowUserStatus = "restore";
+            else
+                nowUserStatus = "delete";
+        } catch (Exception e){
+             throw new BaseException(DATABASE_ERROR);
+        }
+
+        if (order.equals(nowUserStatus)) {
+            throw new BaseException(ALREADY_SAME_STATUS);
+        }
+
+        // 다를 경우 실행
+        try {
+            DelResUserRes delResUserRes = userDao.deleteUser(delResUserReq, order);
+
+            return delResUserRes;
+        } catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

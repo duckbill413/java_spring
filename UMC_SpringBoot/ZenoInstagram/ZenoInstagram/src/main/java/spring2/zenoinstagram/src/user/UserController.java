@@ -1,6 +1,5 @@
 package spring2.zenoinstagram.src.user;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import spring2.zenoinstagram.config.BaseResponse;
 import spring2.zenoinstagram.config.BaseException;
 import spring2.zenoinstagram.src.user.model.*;
@@ -77,12 +76,13 @@ public class UserController {
      */
     @ResponseBody
     @GetMapping("/getAll")
-    public BaseResponse<List<GetUserRes>> getAllUsers(){
+    public BaseResponse<GetUsersRes> getAllUsers(){
         System.out.println("Get All User");
         try{
             List<GetUserRes> getAllUsers = userProvider.getAllUsers();
+            GetUsersRes getUsersRes = new GetUsersRes(getAllUsers);
 
-            return new BaseResponse<List<GetUserRes>>(getAllUsers);
+            return new BaseResponse<>(getUsersRes);
         } catch (BaseException e){
             return new BaseResponse<>((e.getStatus()));
         }
@@ -173,4 +173,26 @@ public class UserController {
         }
     }
 
+    /**
+     * 유저정보삭제/복구 API
+     * [PATCH] /users/status/{order}
+     * 유저의 이메일과 비밀번호를 입력 받고 유저 정보 삭제/복구(STATUS 변경)
+     * String order: delete(삭제), restore(복구)
+     * @return BaseResponse
+     */
+    @ResponseBody
+    @PatchMapping("/status/{order}")
+    public BaseResponse<DelResUserRes> deleteUser(@RequestBody DelResUserReq delResUserReq, @PathVariable String order){
+        try{
+            //로그인 가능 확인
+            if(userProvider.checkPassword(delResUserReq.getEmail(), delResUserReq.getPassword())==0)
+                return new BaseResponse<>(FAILED_TO_LOGIN);
+
+            DelResUserRes delResUserRes = userService.deleteUser(delResUserReq, order);
+
+            return new BaseResponse<>(delResUserRes);
+        } catch (BaseException e){
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
 }

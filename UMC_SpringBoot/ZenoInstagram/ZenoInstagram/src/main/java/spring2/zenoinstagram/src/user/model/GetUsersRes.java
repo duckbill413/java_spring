@@ -4,12 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
-public class DeleteUserRes {
-    private String name;
-    private String nickName;
-    private String phone;
-    private String email;
+public class GetUsersRes {
+    private List<GetUserRes> getUserResList;
 }

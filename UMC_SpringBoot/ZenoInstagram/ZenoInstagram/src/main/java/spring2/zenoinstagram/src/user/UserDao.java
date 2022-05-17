@@ -1,5 +1,6 @@
 package spring2.zenoinstagram.src.user;
 
+import spring2.zenoinstagram.config.BaseException;
 import spring2.zenoinstagram.src.user.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -59,10 +60,10 @@ public class UserDao {
     }
 
     public int createUser(PostUserReq postUserReq) {
-        String createUserQuery = "INSERT INTO Instagram.User (name, nickName, email, password, phone, profileImgUrl, website, introduce)" +
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String createUserQuery = "INSERT INTO Instagram.User (name, nickName, email, password, phone, profileImgUrl, website, introduce) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         Object[] createUserParams = new Object[]{postUserReq.getName(), postUserReq.getNickName(), postUserReq.getEmail(),
                 postUserReq.getPassword(), postUserReq.getPhone(), postUserReq.getProfileImgUrl(), postUserReq.getWebsite(), postUserReq.getIntroduce()};
+
         this.jdbcTemplate.update(createUserQuery, createUserParams);
 
         String lastInsertIdQuery = "select last_insert_id()";
@@ -95,9 +96,10 @@ public class UserDao {
         String checkPasswordQuery = "select password from Instagram.User where email = ?";
         String checkPasswordParams = email;
         String correctPassword = this.jdbcTemplate.queryForObject(checkPasswordQuery, String.class, checkPasswordParams);
-        System.out.println(correctPassword);
-//        String encryptPassword = new SHA256().encrypt(password);
-        String encryptPassword = password; // jwt 비밀번호 미사용시
+
+        String encryptPassword = new SHA256().encrypt(password);
+//        String encryptPassword = password; // jwt 비밀번호 미사용시
+
         if (correctPassword.equals(encryptPassword)) return 1;
         else return 0;
     }
@@ -107,5 +109,31 @@ public class UserDao {
         Object[] modifyUserNameParams = new Object[]{patchUserReq.getNickName(), patchUserReq.getUserIdx()};
 
         return this.jdbcTemplate.update(modifyUserNameQuery, modifyUserNameParams);
+    }
+    public String checkUserStatus(String email){
+        String checkUserStatusQuery = "select status from Instagram.User where email=?";
+        String checkUserEmailParams = email;
+
+        return this.jdbcTemplate.queryForObject(checkUserStatusQuery, String.class, checkUserEmailParams);
+    }
+    public DelResUserRes deleteUser(DelResUserReq delResUserReq, String order) {
+        String delResUserQuery = null;
+        if (order.equals("delete"))
+            delResUserQuery = "UPDATE Instagram.User SET status = 'INACTIVE' WHERE email=?";
+        else if(order.equals("restore"))
+            delResUserQuery = "UPDATE Instagram.User SET status = 'ACTIVE' WHERE email=?";
+        String deleteUserEmailParams = delResUserReq.getEmail();
+
+        this.jdbcTemplate.update(delResUserQuery, deleteUserEmailParams);
+
+        String getUsersStatusQuery = "select name, nickName, phone, email, status from Instagram.User where email=?";
+        return this.jdbcTemplate.queryForObject(getUsersStatusQuery,
+                (rs, rowNum) -> new DelResUserRes(
+                        rs.getString("name"),
+                        rs.getString("nickName"),
+                        rs.getString("phone"),
+                        rs.getString("email"),
+                        rs.getString("status")),
+                deleteUserEmailParams);
     }
 }

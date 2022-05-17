@@ -33,12 +33,6 @@ public class BaseResponse<T> {
         this.result = result;
     }
 
-    public BaseResponse(List<T> result){
-        this.isSuccess = SUCCESS.isSuccess();
-        this.message = SUCCESS.getMessage();
-        this.code = SUCCESS.getCode();
-        this.listResult = result;
-    }
     // 요청에 실패한 경우
     public BaseResponse(BaseResponseStatus status) {
         this.isSuccess = status.isSuccess();

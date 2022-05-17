@@ -1,5 +1,9 @@
-### 이메일과 비밀번호를 이용한 회원조회
+### 이메일과 비밀번호를 이용한 회원조회(Encrypt 미적용)
 GET localhost:8080/users/userInfo?Email=zebra@gmail.com&Pwd=zebra333
+
+### 회원 조회 Email Pwd(Encrypt 적용)
+GET localhost:8080/users/userInfo?Email=fox@gmail.com&Pwd=fox777
+
 
 ### 회원번호를 이용한 회원조회
 GET localhost:8080/users/2
@@ -7,7 +11,7 @@ GET localhost:8080/users/2
 ### 모든 회원 조회
 GET http://localhost:8080/users/getAll
 
-### 회원 등록
+### 회원 등록1 (모든 Data Insert)
 POST http://localhost:8080/users/
 Content-Type: application/json
 
@@ -18,5 +22,36 @@ Content-Type: application/json
   "password": "fox777",
   "phone": "010-7777-8888",
   "profileImgUrl": "foxImg",
+  "website": "foxdot.com",
   "introduce": "여우같이 앙큼하게"
+}
+
+### 회원 등록2 (Null Data exists)
+POST http://localhost:8080/users/
+Content-Type: application/json
+
+{
+  "name": "서민수",
+  "nickName": "gorilla",
+  "email": "gorilla@gmail.com",
+  "password": "gorilla888",
+  "phone": "010-9999-8888"
+}
+
+### 회원 삭제(Status=>INACTIVE)
+PATCH http://localhost:8080/users/status/delete
+Content-Type: application/json
+
+{
+  "email": "gorilla@gmail.com",
+  "password": "gorilla888"
+}
+
+### 회원 복구(Status=>ACTIVE)
+PATCH http://localhost:8080/users/status/restore
+Content-Type: application/json
+
+{
+  "email": "gorilla@gmail.com",
+  "password": "gorilla888"
 }

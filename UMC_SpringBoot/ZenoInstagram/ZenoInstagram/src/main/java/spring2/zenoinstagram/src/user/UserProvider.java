@@ -91,4 +91,11 @@ public class UserProvider {
         }
     }
 
+    public String checkStatus(String email) throws BaseException {
+        try{
+            return userDao.checkUserStatus(email);
+        } catch (Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
