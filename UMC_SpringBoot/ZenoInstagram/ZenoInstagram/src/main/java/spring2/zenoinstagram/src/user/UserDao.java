@@ -1,6 +1,5 @@
 package spring2.zenoinstagram.src.user;
 
-import spring2.zenoinstagram.config.BaseException;
 import spring2.zenoinstagram.src.user.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,6 +29,53 @@ public class UserDao {
                         rs.getString("phone"),
                         rs.getString("email")
                 ));
+    }
+
+    public GetUserInfoRes selectUserInfo(int userIdx) {
+        String selectUsersInfoQuery = "SELECT userIdx, nickName, name, profileImgUrl, website, introduce, \n" +
+                "       IF(FollowerCount is null, 0, FollowerCount) as FollowerCount,\n" +
+                "       IF(FolloweeCount is null, 0, FolloweeCount) as FolloweeCount\n" +
+                "       IF(postCount is null, 0, postCount) as postCount,\n" +
+                "FROM User\n" +
+                "         left JOIN (SELECT userIdx, COUNT(postIdx) as postCount FROM Post WHERE STATUS='ACTIVE' group by userIdx) p ON p.userIdx=User.userIdx\n" +
+                "         left JOIN (SELECT followerIdx, COUNT(followIdx) as FollowerCount FROM Follow WHERE STATUS='ACTIVE' group by followerIdx) f1 ON f1.followerIdx=User.userIdx\n" +
+                "         left JOIN (SELECT followeeIdx, COUNT(followIdx) as FolloweeCount FROM Follow WHERE STATUS='ACTIVE' group by followeeIdx) f2 ON f2.followeeIdx=User.userIdx\n" +
+                "WHERE User.userIdx=? and User.status = 'ACTIVE'";
+
+        int selectUserInfoParam = userIdx;
+
+        return this.jdbcTemplate.queryForObject(selectUsersInfoQuery,
+                (rs, rowNum) -> new GetUserInfoRes(
+                        rs.getString("nickName"),
+                        rs.getString("name"),
+                        rs.getString("profileImgUrl"),
+                        rs.getString("website"),
+                        rs.getString("introduce"),
+                        rs.getInt("followerCount"),
+                        rs.getInt("followeeCount"),
+                        rs.getInt("postCount")
+                ), selectUserInfoParam);
+    }
+
+    public List<GetUserPostsRes> selectUserPosts(int userIdx) {
+        /* 특정 유저에 대하여 해당 유저가 팔로잉하고 있는 유저의 게시물과 해당 게시물의
+좋아요 개수, 댓글 개수, 게시물 게시 시간 출력*/
+        String selectUserPostsQuery = "SELECT p.postIdx as postIdx,\n" +
+                "       pi.imgUrl as postImgUrl\n" +
+                "From Post as p\n" +
+                "       join PostImgUrl pi on p.postIdx = pi.postIdx and pi.status = 'ACTIVE'\n" +
+                "       join User as u on u.userIdx = p.userIdx\n" +
+                "WHERE p.status = 'ACTIVE' and u.userIdx = ?\n" +
+                "group by p.postIdx\n" +
+                "HAVING min(pi.postImgUrlIdx) order by p.postIdx;";
+
+        int selectUserPostsParam = userIdx;
+
+        return this.jdbcTemplate.query(selectUserPostsQuery,
+                (rs, rowNum) -> new GetUserPostsRes(
+                        rs.getInt("postIdx"),
+                        rs.getString("postImgUrl")
+                ), selectUserPostsParam);
     }
 
     public GetUserRes getUsersByEmail(String email) {
@@ -92,6 +138,15 @@ public class UserDao {
         return this.jdbcTemplate.queryForObject(checkPhoneQuery, int.class, checkPhoneParams);
     }
 
+    public int checkUserExist(int userIdx){
+        String checkUserExistQuery = "select exists(select userIdx from User where userIdx = ?";
+        int checkUserExistParams = userIdx;
+
+        return this.jdbcTemplate.queryForObject(checkUserExistQuery,
+                int.class,
+                checkUserExistParams);
+    }
+
     public int checkUserPassword(String email, String password) {
         String checkPasswordQuery = "select password from Instagram.User where email = ?";
         String checkPasswordParams = email;
@@ -110,17 +165,19 @@ public class UserDao {
 
         return this.jdbcTemplate.update(modifyUserNameQuery, modifyUserNameParams);
     }
-    public String checkUserStatus(String email){
+
+    public String checkUserStatus(String email) {
         String checkUserStatusQuery = "select status from Instagram.User where email=?";
         String checkUserEmailParams = email;
 
         return this.jdbcTemplate.queryForObject(checkUserStatusQuery, String.class, checkUserEmailParams);
     }
+
     public DelResUserRes deleteUser(DelResUserReq delResUserReq, String order) {
         String delResUserQuery = null;
         if (order.equals("delete"))
             delResUserQuery = "UPDATE Instagram.User SET status = 'INACTIVE' WHERE email=?";
-        else if(order.equals("restore"))
+        else if (order.equals("restore"))
             delResUserQuery = "UPDATE Instagram.User SET status = 'ACTIVE' WHERE email=?";
         String deleteUserEmailParams = delResUserReq.getEmail();
 

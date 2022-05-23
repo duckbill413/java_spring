@@ -40,7 +40,8 @@ public class UserController {
      * [GET] /users
      * 이메일과 비밀번호를 이용하여 회원조회
      * [GET] /users/userInfo?Email=?&Pwd=?
-     * @param  email, pwd
+     *
+     * @param email, pwd
      * @return BaseResponse<GetUserRes>
      */
 //    Query String
@@ -57,7 +58,7 @@ public class UserController {
                 return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
             }
             // 비밀번호 확인
-            if(userProvider.checkPassword(email, pwd)==0)
+            if (userProvider.checkPassword(email, pwd) == 0)
                 return new BaseResponse<>(FAILED_TO_LOGIN);
 
 
@@ -68,22 +69,34 @@ public class UserController {
         }
     }
 
+    @ResponseBody
+    @GetMapping("Feed/{userIdx}") // (GET) 127.0.0.1:8080/users?Email=&Pwd=
+    public BaseResponse<GetUserFeedRes> getUserFeed(@PathVariable("userIdx") int userIdx) {
+        try {
+            GetUserFeedRes getUserFeedRes = userProvider.retrieveUserFeed(userIdx, userIdx);
+            return new BaseResponse<>((getUserFeedRes));
+        } catch (BaseException exception) {
+            return new BaseResponse<>((exception.getStatus()));
+        }
+
+    }
+
     /**
      * 모든 회원 조회 API
      * [GET] /users/getAll
      *
-     * @return BaseResponse<List<GetUserRes>>
+     * @return BaseResponse<List < GetUserRes>>
      */
     @ResponseBody
     @GetMapping("/getAll")
-    public BaseResponse<GetUsersRes> getAllUsers(){
+    public BaseResponse<GetUsersRes> getAllUsers() {
         System.out.println("Get All User");
-        try{
+        try {
             List<GetUserRes> getAllUsers = userProvider.getAllUsers();
             GetUsersRes getUsersRes = new GetUsersRes(getAllUsers);
 
             return new BaseResponse<>(getUsersRes);
-        } catch (BaseException e){
+        } catch (BaseException e) {
             return new BaseResponse<>((e.getStatus()));
         }
     }
@@ -92,13 +105,14 @@ public class UserController {
      * 회원 조회 API
      * [GET] /users/{userIdx}
      * userIdx를 이용한 회원조회
+     *
      * @param userIdx
      * @return BaseResponse
      */
     @ResponseBody
     @GetMapping("/{userIdx}") // (GET) 127.0.0.1:8080/users/:userIdx
     public BaseResponse<GetUserRes> getUserByIdx(@PathVariable("userIdx") int userIdx) {
-        System.out.println("Get User"+userIdx);
+        System.out.println("Get User" + userIdx);
         try {
             GetUserRes getUsersRes = userProvider.getUsersByIdx(userIdx);
             return new BaseResponse<>(getUsersRes);
@@ -124,13 +138,13 @@ public class UserController {
         if (!isRegexEmail(postUserReq.getEmail())) {
             return new BaseResponse<>(POST_USERS_INVALID_EMAIL);
         }
-        if (postUserReq.getName()==null)
+        if (postUserReq.getName() == null)
             return new BaseResponse<>(POST_USERS_EMPTY_NAME);
-        if (postUserReq.getNickName()==null)
+        if (postUserReq.getNickName() == null)
             return new BaseResponse<>(POST_USERS_EMPTY_NICKNAME);
-        if (postUserReq.getPassword()==null)
+        if (postUserReq.getPassword() == null)
             return new BaseResponse<>(POST_USERS_EMPTY_PASSWORD);
-        if (postUserReq.getPhone()==null)
+        if (postUserReq.getPhone() == null)
             return new BaseResponse<>(POST_USERS_EMPTY_PHONE);
         // 전화번호 정규표현
         if (!isRegexPassword(postUserReq.getPhone()))
@@ -178,20 +192,21 @@ public class UserController {
      * [PATCH] /users/status/{order}
      * 유저의 이메일과 비밀번호를 입력 받고 유저 정보 삭제/복구(STATUS 변경)
      * String order: delete(삭제), restore(복구)
+     *
      * @return BaseResponse
      */
     @ResponseBody
     @PatchMapping("/status/{order}")
-    public BaseResponse<DelResUserRes> deleteUser(@RequestBody DelResUserReq delResUserReq, @PathVariable String order){
-        try{
+    public BaseResponse<DelResUserRes> deleteUser(@RequestBody DelResUserReq delResUserReq, @PathVariable String order) {
+        try {
             //로그인 가능 확인
-            if(userProvider.checkPassword(delResUserReq.getEmail(), delResUserReq.getPassword())==0)
+            if (userProvider.checkPassword(delResUserReq.getEmail(), delResUserReq.getPassword()) == 0)
                 return new BaseResponse<>(FAILED_TO_LOGIN);
 
             DelResUserRes delResUserRes = userService.deleteUser(delResUserReq, order);
 
             return new BaseResponse<>(delResUserRes);
-        } catch (BaseException e){
+        } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }
     }

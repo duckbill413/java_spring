@@ -2,7 +2,7 @@ package spring2.zenoinstagram.src.user;
 
 
 import spring2.zenoinstagram.config.BaseException;
-import spring2.zenoinstagram.src.user.model.GetUserRes;
+import spring2.zenoinstagram.src.user.model.*;
 import spring2.zenoinstagram.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static spring2.zenoinstagram.config.BaseResponseStatus.DATABASE_ERROR;
+import static spring2.zenoinstagram.config.BaseResponseStatus.USERS_EMPTY_USER_ID;
 
 //Provider : Read의 비즈니스 로직 처리
 @Service
@@ -34,6 +35,25 @@ public class UserProvider {
         try {
             GetUserRes getUsersRes = userDao.getUsersByEmail(email);
             return getUsersRes;
+        } catch (Exception exception) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public GetUserFeedRes retrieveUserFeed(int userIdxByJwt, int userIdx) throws BaseException {
+        Boolean isMyFeed = true;
+
+        if(checkUserExist(userIdx)==0)
+            throw new BaseException(USERS_EMPTY_USER_ID);
+
+        try {
+            if(userIdx != userIdxByJwt) // 다른 유저의 Feed인지 확인
+                isMyFeed = false;
+
+            GetUserInfoRes getUserInfoRes = userDao.selectUserInfo(userIdx);
+            List<GetUserPostsRes> getUserPostsRes = userDao.selectUserPosts(userIdx);
+            GetUserFeedRes getUserFeedRes = new GetUserFeedRes(isMyFeed, getUserInfoRes, getUserPostsRes);
+            return getUserFeedRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }
@@ -96,6 +116,14 @@ public class UserProvider {
             return userDao.checkUserStatus(email);
         } catch (Exception e){
             throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public int checkUserExist(int userIdx) throws BaseException {
+        try{
+            return userDao.checkUserExist(userIdx);
+        } catch (Exception e){
+            throw new BaseException((DATABASE_ERROR));
         }
     }
 }

@@ -55,3 +55,6 @@ Content-Type: application/json
   "email": "gorilla@gmail.com",
   "password": "gorilla888"
 }
+
+### 회원 정보에 따른 포스트 리스트 조회
+GET http://localhost:8080/Feed/1
