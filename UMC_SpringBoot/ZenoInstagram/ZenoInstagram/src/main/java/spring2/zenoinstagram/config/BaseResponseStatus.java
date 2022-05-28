@@ -37,6 +37,16 @@ public enum BaseResponseStatus {
     POST_USERS_INVALID_PHONE(false, 2023, "전화번호 형식을 확인해주세요 {000-0000-0000}"),
     POST_USERS_EXISTS_PHONE(false, 2024, "중복된 전화번호 입니다."),
 
+    // post
+    POST_POSTS_EMPTY_CONTENTS(false, 2200, "POST 작성 내용이 없습니다."),
+    POST_POSTS_INVALID_CONTENTS(false, 2201, "게시물 작성 글자수(450)를 초과하였습니다"),
+    POST_POSTS_EMPTY_IMG(false, 2202, "POST 작성 이미지가 없습니다."),
+    POSTS_EMPTY_POST_ID(false, 2203, "POST ID가 올바르지 않습니다"),
+    POSTS_EMPTY_USER_POST(false, 2204, "유저가 작성한 게시물이 없습니다."),
+
+    // post patch
+    MODIFY_FAIL_POST(false, 2501, "게시물 수정에 실패하였습니다."),
+    DELETE_FAIL_POST(false, 2502, "게시물 삭제에 실패하였습니다."),
 
 
     /**

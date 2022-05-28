@@ -32,20 +32,20 @@ public class UserDao {
     }
 
     public GetUserInfoRes selectUserInfo(int userIdx) {
-        String selectUsersInfoQuery = "SELECT userIdx, nickName, name, profileImgUrl, website, introduce, \n" +
-                "       IF(FollowerCount is null, 0, FollowerCount) as FollowerCount,\n" +
-                "       IF(FolloweeCount is null, 0, FolloweeCount) as FolloweeCount\n" +
-                "       IF(postCount is null, 0, postCount) as postCount,\n" +
-                "FROM User\n" +
-                "         left JOIN (SELECT userIdx, COUNT(postIdx) as postCount FROM Post WHERE STATUS='ACTIVE' group by userIdx) p ON p.userIdx=User.userIdx\n" +
-                "         left JOIN (SELECT followerIdx, COUNT(followIdx) as FollowerCount FROM Follow WHERE STATUS='ACTIVE' group by followerIdx) f1 ON f1.followerIdx=User.userIdx\n" +
-                "         left JOIN (SELECT followeeIdx, COUNT(followIdx) as FolloweeCount FROM Follow WHERE STATUS='ACTIVE' group by followeeIdx) f2 ON f2.followeeIdx=User.userIdx\n" +
-                "WHERE User.userIdx=? and User.status = 'ACTIVE'";
+        String selectUsersInfoQuery = "SELECT nickName, name, profileImgUrl, website, introduce, \n" +
+                "       IF(FollowerCount is null, 0, FollowerCount) as followerCount,\n" +
+                "       IF(FolloweeCount is null, 0, FolloweeCount) as followeeCount,\n" +
+                "       IF(postCount is null, 0, postCount) as postCount\n" +
+                "FROM User u\n" +
+                "         left JOIN (SELECT userIdx, COUNT(postIdx) as postCount FROM Post WHERE STATUS='ACTIVE' group by userIdx) p ON p.userIdx=u.userIdx\n" +
+                "         left JOIN (SELECT followerIdx, COUNT(followIdx) as FollowerCount FROM Follow WHERE STATUS='ACTIVE' group by followerIdx) f1 ON f1.followerIdx=u.userIdx\n" +
+                "         left JOIN (SELECT followeeIdx, COUNT(followIdx) as FolloweeCount FROM Follow WHERE STATUS='ACTIVE' group by followeeIdx) f2 ON f2.followeeIdx=u.userIdx\n" +
+                "WHERE u.userIdx=? and u.status = 'ACTIVE'";
 
         int selectUserInfoParam = userIdx;
 
         return this.jdbcTemplate.queryForObject(selectUsersInfoQuery,
-                (rs, rowNum) -> new GetUserInfoRes(
+                (rs, rowNum) -> new GetUserInfoRes (
                         rs.getString("nickName"),
                         rs.getString("name"),
                         rs.getString("profileImgUrl"),
@@ -58,8 +58,7 @@ public class UserDao {
     }
 
     public List<GetUserPostsRes> selectUserPosts(int userIdx) {
-        /* 특정 유저에 대하여 해당 유저가 팔로잉하고 있는 유저의 게시물과 해당 게시물의
-좋아요 개수, 댓글 개수, 게시물 게시 시간 출력*/
+        /* 특정 유저에 대하여 해당 유저가 작성한 게시물의 대표 이미지를 출력*/
         String selectUserPostsQuery = "SELECT p.postIdx as postIdx,\n" +
                 "       pi.imgUrl as postImgUrl\n" +
                 "From Post as p\n" +
@@ -67,7 +66,7 @@ public class UserDao {
                 "       join User as u on u.userIdx = p.userIdx\n" +
                 "WHERE p.status = 'ACTIVE' and u.userIdx = ?\n" +
                 "group by p.postIdx\n" +
-                "HAVING min(pi.postImgUrlIdx) order by p.postIdx;";
+                "HAVING min(pi.postImgUrlIdx) order by p.postIdx";
 
         int selectUserPostsParam = userIdx;
 
@@ -139,7 +138,7 @@ public class UserDao {
     }
 
     public int checkUserExist(int userIdx){
-        String checkUserExistQuery = "select exists(select userIdx from User where userIdx = ?";
+        String checkUserExistQuery = "select exists(select userIdx from User where userIdx = ?)";
         int checkUserExistParams = userIdx;
 
         return this.jdbcTemplate.queryForObject(checkUserExistQuery,

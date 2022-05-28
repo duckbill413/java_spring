@@ -51,8 +51,9 @@ public class UserProvider {
                 isMyFeed = false;
 
             GetUserInfoRes getUserInfoRes = userDao.selectUserInfo(userIdx);
-            List<GetUserPostsRes> getUserPostsRes = userDao.selectUserPosts(userIdx);
-            GetUserFeedRes getUserFeedRes = new GetUserFeedRes(isMyFeed, getUserInfoRes, getUserPostsRes);
+            List<GetUserPostsRes> getUserPostsResList = userDao.selectUserPosts(userIdx);
+
+            GetUserFeedRes getUserFeedRes = new GetUserFeedRes(isMyFeed, getUserInfoRes, getUserPostsResList);
             return getUserFeedRes;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);

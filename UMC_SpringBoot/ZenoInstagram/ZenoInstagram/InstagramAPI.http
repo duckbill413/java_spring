@@ -57,4 +57,30 @@ Content-Type: application/json
 }
 
 ### 회원 정보에 따른 포스트 리스트 조회
-GET http://localhost:8080/Feed/1
+GET http://localhost:8080/users/feed/13
+
+
+### 회원 번호에 대하여 작성한 게시물 확인
+GET http://localhost:8080/posts?userIdx=12
+
+### 게시물 작성 API
+POST http://localhost:8080/posts
+Content-Type: application/json
+
+{
+  "userIdx": 12,
+  "content": "TEST API WORKING",
+  "postImgsUrl": ["TestUrl1.img", "TestUrl2.img"]
+}
+
+### 게시물 수정 API
+PATCH http://localhost:8080/posts/7
+Content-Type: application/json
+
+{
+  "userIdx": 12,
+  "content": "TEST API UPDATED"
+}
+
+### 게시물 삭제 API
+PATCH http://localhost:8080/posts/7/status

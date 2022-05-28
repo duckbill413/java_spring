@@ -65,20 +65,20 @@ public class UserController {
             GetUserRes getUsersRes = userProvider.getUsersByEmail(email);
             return new BaseResponse<>(getUsersRes);
         } catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
+            return new BaseResponse<>(exception.getStatus());
         }
     }
 
     @ResponseBody
-    @GetMapping("Feed/{userIdx}") // (GET) 127.0.0.1:8080/users?Email=&Pwd=
+    @GetMapping("/feed/{userIdx}") // (GET) 127.0.0.1:8080/users/feed/12
     public BaseResponse<GetUserFeedRes> getUserFeed(@PathVariable("userIdx") int userIdx) {
         try {
             GetUserFeedRes getUserFeedRes = userProvider.retrieveUserFeed(userIdx, userIdx);
-            return new BaseResponse<>((getUserFeedRes));
-        } catch (BaseException exception) {
-            return new BaseResponse<>((exception.getStatus()));
-        }
 
+            return new BaseResponse<>(getUserFeedRes);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
     }
 
     /**
@@ -112,7 +112,6 @@ public class UserController {
     @ResponseBody
     @GetMapping("/{userIdx}") // (GET) 127.0.0.1:8080/users/:userIdx
     public BaseResponse<GetUserRes> getUserByIdx(@PathVariable("userIdx") int userIdx) {
-        System.out.println("Get User" + userIdx);
         try {
             GetUserRes getUsersRes = userProvider.getUsersByIdx(userIdx);
             return new BaseResponse<>(getUsersRes);
@@ -197,7 +196,7 @@ public class UserController {
      */
     @ResponseBody
     @PatchMapping("/status/{order}")
-    public BaseResponse<DelResUserRes> deleteUser(@RequestBody DelResUserReq delResUserReq, @PathVariable String order) {
+    public BaseResponse<DelResUserRes> deleteUser(@RequestBody DelResUserReq delResUserReq, @PathVariable("order") String order) {
         try {
             //로그인 가능 확인
             if (userProvider.checkPassword(delResUserReq.getEmail(), delResUserReq.getPassword()) == 0)
