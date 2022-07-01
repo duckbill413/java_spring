@@ -2,9 +2,7 @@ package spring2.zenoinstagram.src.user;
 
 import spring2.zenoinstagram.config.BaseException;
 
-import spring2.zenoinstagram.src.user.model.PatchUserReq;
-import spring2.zenoinstagram.src.user.model.PostUserReq;
-import spring2.zenoinstagram.src.user.model.PostUserRes;
+import spring2.zenoinstagram.src.user.model.*;
 import spring2.zenoinstagram.utils.JwtService;
 import spring2.zenoinstagram.utils.SHA256;
 
@@ -36,11 +34,13 @@ public class UserService {
         // 이메일 중복 확인
         if (userProvider.checkEmail(postUserReq.getEmail()) == 1) {
             throw new BaseException(POST_USERS_EXISTS_EMAIL);
-        // 닉네임 중복 확인
-        }if (userProvider.checkNickName(postUserReq.getNickName()) == 1) {
+            // 닉네임 중복 확인
+        }
+        if (userProvider.checkNickName(postUserReq.getNickName()) == 1) {
             throw new BaseException(POST_USERS_EXISTS_NICKNAME);
-        // 전화번호 중복 확인
-        }if (userProvider.checkPhone(postUserReq.getPhone()) == 1) {
+            // 전화번호 중복 확인
+        }
+        if (userProvider.checkPhone(postUserReq.getPhone()) == 1) {
             throw new BaseException(POST_USERS_EXISTS_PHONE);
         }
 
