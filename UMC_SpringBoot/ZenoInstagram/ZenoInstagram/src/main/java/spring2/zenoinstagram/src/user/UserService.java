@@ -44,14 +44,6 @@ public class UserService {
             throw new BaseException(POST_USERS_EXISTS_PHONE);
         }
 
-        // 필수요소가 아닌 요소의 인자 초기화
-        if (postUserReq.getProfileImgUrl()==null)
-            postUserReq.setProfileImgUrl(null);
-        if (postUserReq.getWebsite()==null)
-            postUserReq.setWebsite(null);
-        if (postUserReq.getIntroduce()==null)
-            postUserReq.setIntroduce(null);
-
         String pwd;
         try {
             //암호화
