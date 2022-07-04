@@ -1,7 +1,0 @@
-GET localhost:8080/users
-
-###
-GET localhost:8080/users?Email=bbb@gmail.com
-
-###
-PATCH localhost:8080/users?userIdx=3
