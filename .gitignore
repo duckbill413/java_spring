@@ -190,3 +190,5 @@ gradle-app.setting
 .classpath
 
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,windows,intellij
+rising-zeno/src/main/resources/application.yml
+rising-zeno/src/main/java/com/example/rising/config/secret/Secret.java
