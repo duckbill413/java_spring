@@ -1,5 +1,6 @@
 package com.example.rising.src.user.model;
 
+import com.example.rising.src.heart.model.Heart;
 import com.example.rising.src.post.model.Post;
 import lombok.*;
 
@@ -12,15 +13,12 @@ import java.util.List;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Builder
-@Entity
-public class User {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userIdx;
+public class Users {
+    private Long usersIdx;
     private String email;
     private String password;
     private String phoneNumber;
+    private String address;
     private String nickname;
     private String profileImg;
-    @OneToMany(mappedBy = "user")
-    private List<Post> posts = new ArrayList<>();
 }

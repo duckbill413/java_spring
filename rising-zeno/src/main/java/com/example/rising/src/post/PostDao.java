@@ -1,10 +1,9 @@
 package com.example.rising.src.post;
 
 import com.example.rising.config.BaseException;
-import com.example.rising.src.post.model.Category;
-import com.example.rising.src.post.model.GetPostRes;
-import com.example.rising.src.post.model.PostCreateReq;
+import com.example.rising.src.post.model.*;
 import com.example.rising.src.img.model.Image;
+import com.example.rising.src.sale.SaleDao;
 import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,19 +25,26 @@ public class PostDao {
     }
 
     public Long createPost(long userIdx, PostCreateReq postCreateReq) {
-        String createPostQuery = "insert into post (title, content, category, price, user_fk) values(?, ?, ?, ?, ?)";
+        // post 생성
+        String createPostQuery = "insert into post (title, content, category, price, users_idx) values(?, ?, ?, ?, ?)";
         Object[] createPostParams = new Object[]{postCreateReq.getTitle(), postCreateReq.getContent(),
                 postCreateReq.getCategory(), postCreateReq.getPrice(), userIdx};
         this.jdbcTemplate.update(createPostQuery, createPostParams);
+
+        // image 생성
         String lastInsertIdQuery = "select last_insert_id()";
         long postIdx = this.jdbcTemplate.queryForObject(lastInsertIdQuery, Long.class);
-
         List<String> images = postCreateReq.getImageUrls();
         String createImageQuery = "insert into image (img_url, post_fk) values (?, ?)";
         images.forEach(image -> {
             Object[] createImageParams = new Object[]{image, postIdx};
             this.jdbcTemplate.update(createImageQuery, createImageParams);
         });
+
+        // sale 생성
+        String query = "INSERT INTO sale (post_idx, status) VALUES (?, 'ON_SALE')";
+        String param = String.valueOf(postIdx);
+        this.jdbcTemplate.update(query, param);
 
         return postIdx;
     }
@@ -58,5 +64,23 @@ public class PostDao {
                                         rs.getLong("post_idx")))
                 .build(),
                 start);
+    }
+
+    public int checkPostExists(long postIdx){
+        String checkPostQuery = "SELECT EXISTS (SELECT post_idx FROM post WHERE post_idx = ?)";
+        String checkPostParam = String.valueOf(postIdx);
+        return this.jdbcTemplate.queryForObject(checkPostQuery, int.class, checkPostParam);
+    }
+
+    public FindPostRes findPostWriter(long postIdx){
+        String findPostWriterQuery = "SELECT * FROM post WHERE post_idx = ?";
+        String findPostWriterParam = String.valueOf(postIdx);
+
+        return this.jdbcTemplate.queryForObject(findPostWriterQuery,
+                (rs, rowNum) -> FindPostRes.builder()
+                        .postIdx(rs.getLong("post_idx"))
+                        .usersIdx(rs.getLong("users_idx"))
+                        .build(),
+                findPostWriterParam);
     }
 }

@@ -18,17 +18,17 @@ public class UserProvider {
 
     // 로그인(password 검사)
     public PostLoginRes logIn(PostLoginReq postLoginReq) throws BaseException {
-        User user = userDao.getPwd(postLoginReq);
+        Users users = userDao.getPwd(postLoginReq);
         String password;
         try {
-            password = new AES128(Secret.USER_INFO_PASSWORD_KEY).decrypt(user.getPassword()); // 암호화
+            password = new AES128(Secret.USER_INFO_PASSWORD_KEY).decrypt(users.getPassword()); // 암호화
             // 회원가입할 때 비밀번호가 암호화되어 저장되었기 떄문에 로그인을 할때도 암호화된 값끼리 비교를 해야합니다.
         } catch (Exception ignored) {
             throw new BaseException(PASSWORD_DECRYPTION_ERROR);
         }
 
         if (postLoginReq.getPassword().equals(password)) { //비밀번호가 일치한다면 userIdx를 가져온다.
-            Long userIdx = userDao.getPwd(postLoginReq).getUserIdx();
+            Long userIdx = userDao.getPwd(postLoginReq).getUsersIdx();
             String jwt = jwtService.createJwt(userIdx);
             return new PostLoginRes(userIdx,jwt);
         } else { // 비밀번호가 다르다면 에러메세지를 출력한다.
@@ -54,10 +54,10 @@ public class UserProvider {
     }
 
     // 해당 userIdx를 갖는 User의 정보 조회
-    public User getUserInfo(long userIdx) throws BaseException {
+    public Users getUserInfo(long userIdx) throws BaseException {
         try {
-            User findUser = userDao.getUser(userIdx);
-            return findUser;
+            Users findUsers = userDao.getUser(userIdx);
+            return findUsers;
         } catch (Exception exception) {
             throw new BaseException(DATABASE_ERROR);
         }

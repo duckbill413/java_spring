@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/post")
+@RequestMapping("/api/post")
 @RequiredArgsConstructor
 public class PostController {
     private final JwtService jwtService;

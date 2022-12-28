@@ -22,6 +22,8 @@ public class PostUserReq {
     @NotNull(message = "전화번호가 비어 있습니다.")
     @Pattern(regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}$", message = "전화번호를 확인 해주세요. (형식: XXX-XXXX-XXXX)")
     private String phoneNumber;
+    @NotNull(message = "주소를 입력 해주세요.")
+    private String address;
     @NotNull(message = "닉네임이 입력되지 않았습니다.")
     private String nickname;
     private String profileImg;

@@ -91,8 +91,8 @@ public class UserController {
      */
     @ApiOperation("유저 정보 조회")
     @PostMapping("/info")
-    public BaseResponse<User> getUserInfo(@Valid @RequestBody PostUserInfoReq postUserInfoReq,
-                                          BindingResult bindingResult) {
+    public BaseResponse<Users> getUserInfo(@Valid @RequestBody PostUserInfoReq postUserInfoReq,
+                                           BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new BaseResponse<>(new BindingException().message(bindingResult));
         }
@@ -100,8 +100,8 @@ public class UserController {
             Long userIdxByJwt = jwtService.getUserIdx();
             PostLoginReq postLoginReq = new PostLoginReq(postUserInfoReq.getEmail(), postUserInfoReq.getPassword());
             userProvider.logIn(postLoginReq);
-            User findUser = userProvider.getUserInfo(userIdxByJwt);
-            return new BaseResponse<>(findUser);
+            Users findUsers = userProvider.getUserInfo(userIdxByJwt);
+            return new BaseResponse<>(findUsers);
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }

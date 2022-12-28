@@ -31,8 +31,9 @@ public enum BaseResponseStatus {
     POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
     POST_USERS_EXISTS_NICKNAME(false, 2018, "중복된 닉네임입니다."),
     POST_CATEGORY_INVALID(false, 2019, "카테고리를 확인 해주세요."),
-
-
+    POST_NOT_EXISTS(false, 2020, "존재하지 않는 게시물 입니다."),
+    SEND_MESSAGE_FAILED(false, 2021, "메시지 전송에 실패하였습니다."),
+    SALE_CATEGORY_INVALID(false, 2022, "세일 카테고리를 확인 해주세요"),
 
     /**
      * 3000 : Response 오류
