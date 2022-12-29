@@ -23,6 +23,8 @@ public class PostCreateReq {
     private String content;
     @NotNull(message = "카테고리를 선택해주세요.")
     private String category;
+    @NotNull
     private Long price;
+    @NotNull
     private List<String> imageUrls;
 }

@@ -42,9 +42,9 @@ public class PostDao {
         });
 
         // sale 생성
-        String query = "INSERT INTO sale (post_idx, status) VALUES (?, 'ON_SALE')";
-        String param = String.valueOf(postIdx);
-        this.jdbcTemplate.update(query, param);
+        String query = "INSERT INTO sale (post_idx, status, seller) VALUES (?, 'ON_SALE', ?)";
+        Object [] params = new Object[]{postIdx, userIdx};
+        this.jdbcTemplate.update(query, params);
 
         return postIdx;
     }

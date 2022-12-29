@@ -1,19 +1,16 @@
 package com.example.rising.src.sale.model;
 
+import com.example.rising.src.post.model.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PutSoldReq {
-    @NotNull
-    private long postIdx;
-    @NotNull
+public class PostSalesRes {
+    private Post post;
     private String status;
 }

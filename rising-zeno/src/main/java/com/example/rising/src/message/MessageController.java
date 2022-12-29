@@ -25,6 +25,7 @@ public class MessageController {
     private final PostProvider postProvider;
     private final JwtService jwtService;
     private final MessageService messageService;
+
     @ApiOperation(value = "메시지 보내기")
     @PostMapping("/send")
     public BaseResponse<String> sendMessage(@Valid @RequestBody PostSendReq postSendReq,
@@ -42,9 +43,9 @@ public class MessageController {
             long userIdxByJwt = jwtService.getUserIdx();
             messageService.sendMessage(findPostRes.getPostIdx(), userIdxByJwt, findPostRes.getUsersIdx(), postSendReq.getMessage());
 
-            return new BaseResponse<>("메세지가 발송 되었습니다.");
+            return new BaseResponse<>(true, 1000, "메세지가 발송 되었습니다.");
         } catch (BaseException e){
-            return new BaseResponse<String>(e.getStatus());
+            return new BaseResponse<>(e.getStatus());
         }
     }
 

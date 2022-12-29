@@ -27,12 +27,12 @@ public class UserController {
      * 회원가입 API
      * [POST] /api/user/sign-up
      */
-    @ApiOperation(value = "회원가입")
+    @ApiOperation(value = "회원 가입")
     @PostMapping("/sign-up")
     public BaseResponse<PostUserRes> createUser(@Valid @RequestBody PostUserReq postUserReq,
                                                 BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return new BaseResponse<>(new BindingException().message(bindingResult));
+            return new BaseResponse<>(false, 400, new BindingException().message(bindingResult));
         }
         try {
             PostUserRes postUserRes = userService.createUser(postUserReq);
@@ -51,7 +51,7 @@ public class UserController {
     public BaseResponse<PostLoginRes> logIn(@Valid @RequestBody PostLoginReq postLoginReq,
                                             BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return new BaseResponse<>(new BindingException().message(bindingResult));
+            return new BaseResponse<>(false, 400, new BindingException().message(bindingResult));
         }
         try {
             PostLoginRes postLoginRes = userProvider.logIn(postLoginReq);
@@ -73,7 +73,6 @@ public class UserController {
             return new BaseResponse<>(new BindingException().message(bindingResult));
         }
         try {
-            //jwt에서 idx 추출.
             long userIdxByJwt = jwtService.getUserIdx();
 
             userService.modifyUserPwd(userIdxByJwt, patchPwdReq.getNewPassword());
@@ -89,19 +88,19 @@ public class UserController {
      * 유저 정보 조회
      * [POST] /api/user/info
      */
-    @ApiOperation("유저 정보 조회")
+    @ApiOperation("회원 정보 조회")
     @PostMapping("/info")
-    public BaseResponse<Users> getUserInfo(@Valid @RequestBody PostUserInfoReq postUserInfoReq,
+    public BaseResponse<PostUserInfoRes> getUserInfo(@Valid @RequestBody PostUserInfoReq postUserInfoReq,
                                            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return new BaseResponse<>(new BindingException().message(bindingResult));
+            return new BaseResponse<>(false, 400, new BindingException().message(bindingResult));
         }
         try {
-            Long userIdxByJwt = jwtService.getUserIdx();
             PostLoginReq postLoginReq = new PostLoginReq(postUserInfoReq.getEmail(), postUserInfoReq.getPassword());
-            userProvider.logIn(postLoginReq);
-            Users findUsers = userProvider.getUserInfo(userIdxByJwt);
-            return new BaseResponse<>(findUsers);
+            PostLoginRes postLoginRes =  userProvider.logIn(postLoginReq);
+
+            Users findUsers = userProvider.getUserInfo(postLoginRes.getUserIdx());
+            return new BaseResponse<>(new PostUserInfoRes(findUsers, postLoginRes.getJwt()));
         } catch (BaseException exception) {
             return new BaseResponse<>(exception.getStatus());
         }

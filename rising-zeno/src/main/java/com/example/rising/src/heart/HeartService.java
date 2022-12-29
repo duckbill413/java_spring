@@ -20,9 +20,10 @@ public class HeartService {
             throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
         }
     }
-    public void toggleHeart(long userIdx, long postIdx) throws BaseException {
+    public String toggleHeart(long userIdx, long postIdx) throws BaseException {
         try {
-            heartDao.toggleHeart(userIdx, postIdx);
+            String result = heartDao.toggleHeart(userIdx, postIdx);
+            return result;
         } catch (Exception e){
             throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
         }
