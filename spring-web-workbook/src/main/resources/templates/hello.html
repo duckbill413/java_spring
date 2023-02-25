@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!-- 텍스트 -->
+<h1 th:text="${msg}"></h1>
+
+<!-- 주석 -->
+<!--/* <h3 th:each="${sos}">SOS</h3> */-->
+
+<!-- 변수 선언 -->
+<div th:with="num1 = ${10}, num2 = ${20}">
+    <h4 th:text="${num1 + num2}"></h4>
+</div>
+
+<!-- 반복문과 제어문 처리 -->
+<ul>
+    <li th:each="str: ${list}" th:text="${str}"></li>
+</ul>
+
+<ul>
+    <th:block th:each="str: ${list}">
+        <li>[[${str}]]</li>
+    </th:block>
+</ul>
+<!-- 반복문의 status 변수
+Thymeleaf는 th:each를 처리할 때 현재 반복문의 내부 상태에 변수를 추가해서 사용할 수 있다.
+일반 status 변수라고 하는데 index/count/size/first/last/odd/even 등을 이용해서
+자주 사용하는 값들을 출력할 수 있다. -->
+<ul>
+    <li th:each="str, status: ${list}">
+        [[${status.index}]] -- [[${str}]]
+    </li>
+</ul>
+<!-- th:if, th:unless -->
+<ul>
+    <li th:each="str, status: ${list}">
+        <span th:if="${status.odd}"> ODD -- [[${str}]]</span>
+        <span th:unless="${status.odd}"> EVEN -- [[${str}]]</span>
+    </li>
+</ul>
+<!-- 삼항 연산자의 사용 -->
+<ul>
+    <li th:each="str, status: ${list}">
+        <span th:text="${status.odd} ? 'ODD ---'+${str} : 'EVEN ---' +${str}"></span>
+    </li>
+</ul>
+<!-- th:switch -->
+<ul>
+    <li th:each="str, status: ${list}">
+        <th:block th:switch="${status.index % 3}">
+            <span th:case="0">0</span>
+            <span th:case="1">1</span>
+            <span th:case="2">2</span>
+        </th:block>
+    </li>
+</ul>
+<!-- th:href 링크 처리 -->
+<a th:href="@{/ex/ex1}">Go to /ex/ex1</a>
+<!-- 링크의 쿼리 스트링 처리 -->
+<a th:href="@{/hello(name='AAA', age=16)}">Go to /hello</a>
+<a th:href="@{/hello/{param1}(param1=${age})}">Go to /hello/param1</a>
+</body>
+</html>
