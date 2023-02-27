@@ -33,7 +33,9 @@ dependencies {
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.0'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.0.3'
 
-
+    // model mapper
+    implementation 'org.modelmapper:modelmapper:3.1.1'
+    // lombok
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 

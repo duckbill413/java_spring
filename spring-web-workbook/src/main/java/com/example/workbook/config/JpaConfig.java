@@ -1,5 +1,6 @@
 package com.example.workbook.config;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 /**
@@ -8,5 +9,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
  * description   :
  **/
 @EnableJpaAuditing
+@Configuration
 public class JpaConfig {
 }
