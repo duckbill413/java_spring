@@ -5,6 +5,8 @@ import com.example.workbook.dto.BoardDTO;
 import com.example.workbook.service.BoardService;
 import com.example.workbook.service.PageRequestDTO;
 import com.example.workbook.service.PageResponseDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -26,6 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/board")
 @Log4j2
 @RequiredArgsConstructor
+@Tag(name = "Board", description = "Board 조회/등록/수정/삭제")
 public class BoardController {
     private final BoardService boardService;
 
@@ -42,6 +45,7 @@ public class BoardController {
     }
 
     @PostMapping("/register")
+    @Operation(summary = "Board 등록", description = "새로운 게시물을 등록합니다.")
     public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult,
                                RedirectAttributes redirectAttributes) {
         log.info("board POST register..............");
@@ -58,7 +62,6 @@ public class BoardController {
 
         return "redirect:/board/list";
     }
-
     @GetMapping({"/read", "/modify"})
     public void read(Long bno, PageRequestDTO pageRequestDTO, Model model) {
 
