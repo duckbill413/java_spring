@@ -1,4 +1,4 @@
-package com.example.workbook.service;
+package com.example.workbook.dto;
 
 import lombok.Builder;
 import lombok.Getter;

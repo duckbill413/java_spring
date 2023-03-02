@@ -1,7 +1,10 @@
 package com.example.workbook.service;
 
-import com.example.workbook.domain.board.Board;
+import com.example.workbook.domain.Board;
 import com.example.workbook.dto.BoardDTO;
+import com.example.workbook.dto.BoardListReplyCountDTO;
+import com.example.workbook.dto.PageRequestDTO;
+import com.example.workbook.dto.PageResponseDTO;
 import com.example.workbook.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -77,6 +80,21 @@ public class BoardServiceImpl implements BoardService {
         return PageResponseDTO.<BoardDTO>withAll()
                 .pageRequestDTO(pageRequestDTO)
                 .dtoList(dtoList)
+                .total((int) result.getTotalElements())
+                .build();
+    }
+
+    @Override
+    public PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO) {
+        String[] types = pageRequestDTO.getTypes();
+        String keyword = pageRequestDTO.getKeyword();
+        Pageable pageable = pageRequestDTO.getPageable("bno");
+
+        Page<BoardListReplyCountDTO> result = boardRepository.searchWithReplyCount(types, keyword, pageable);
+
+        return PageResponseDTO.<BoardListReplyCountDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(result.getContent())
                 .total((int) result.getTotalElements())
                 .build();
     }

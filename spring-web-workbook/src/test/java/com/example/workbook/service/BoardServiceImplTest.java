@@ -1,14 +1,14 @@
 package com.example.workbook.service;
 
 import com.example.workbook.dto.BoardDTO;
-import com.example.workbook.repository.BoardRepository;
+import com.example.workbook.dto.BoardListReplyCountDTO;
+import com.example.workbook.dto.PageRequestDTO;
+import com.example.workbook.dto.PageResponseDTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * author        : duckbill413
@@ -57,8 +57,8 @@ class BoardServiceImplTest {
                 .size(10)
                 .build();
 
-        PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
-
+//        PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
+        PageResponseDTO<BoardListReplyCountDTO> responseDTO = boardService.listWithReplyCount(pageRequestDTO);
         log.info(responseDTO);
     }
 }

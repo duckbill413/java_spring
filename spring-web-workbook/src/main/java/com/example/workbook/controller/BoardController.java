@@ -1,16 +1,15 @@
 package com.example.workbook.controller;
 
-import com.example.workbook.domain.board.Board;
 import com.example.workbook.dto.BoardDTO;
+import com.example.workbook.dto.BoardListReplyCountDTO;
 import com.example.workbook.service.BoardService;
-import com.example.workbook.service.PageRequestDTO;
-import com.example.workbook.service.PageResponseDTO;
+import com.example.workbook.dto.PageRequestDTO;
+import com.example.workbook.dto.PageResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,8 +33,11 @@ public class BoardController {
 
     @GetMapping("/list")
     public void list(PageRequestDTO pageRequestDTO, Model model) {
-        PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
+//        PageResponseDTO<BoardDTO> responseDTO = boardService.list(pageRequestDTO);
+        PageResponseDTO<BoardListReplyCountDTO> responseDTO = boardService.listWithReplyCount(pageRequestDTO);
+
         log.info(responseDTO);
+
         model.addAttribute("responseDTO", responseDTO);
     }
 
@@ -64,7 +66,7 @@ public class BoardController {
     }
     @GetMapping({"/read", "/modify"})
     public void read(Long bno, PageRequestDTO pageRequestDTO, Model model) {
-
+        log.info("call");
         BoardDTO boardDTO = boardService.readOne(bno);
 
         log.info(boardDTO);

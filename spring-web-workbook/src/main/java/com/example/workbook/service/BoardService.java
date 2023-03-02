@@ -1,6 +1,9 @@
 package com.example.workbook.service;
 
 import com.example.workbook.dto.BoardDTO;
+import com.example.workbook.dto.BoardListReplyCountDTO;
+import com.example.workbook.dto.PageRequestDTO;
+import com.example.workbook.dto.PageResponseDTO;
 
 /**
  * author        : duckbill413
@@ -13,4 +16,6 @@ public interface BoardService {
     void modify(BoardDTO boardDTO);
     void remove(Long bno);
     PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO);
+    // 댓글의 숫자까지 처리
+    PageResponseDTO<BoardListReplyCountDTO> listWithReplyCount(PageRequestDTO pageRequestDTO);
 }
