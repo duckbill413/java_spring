@@ -14,7 +14,7 @@ import java.util.List;
  **/
 @Getter
 @ToString
-public class PageResponseDTO<E> {
+public class PageResponseDTO<T> {
     private int page;
     private int size;
     private int total;
@@ -26,10 +26,10 @@ public class PageResponseDTO<E> {
     private boolean prev;
     // 다음 페이지 존재 여부
     private boolean next;
-    private List<E> dtoList;
+    private List<T> dtoList;
 
     @Builder(builderMethodName = "withAll")
-    public PageResponseDTO(PageRequestDTO pageRequestDTO, List<E> dtoList, int total) {
+    public PageResponseDTO(PageRequestDTO pageRequestDTO, List<T> dtoList, int total) {
         if (total <= 0)
             return;
 

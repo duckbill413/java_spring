@@ -1,6 +1,7 @@
 package com.example.workbook.repository;
 
 import com.example.workbook.domain.Board;
+import com.example.workbook.dto.BoardListAllDTO;
 import com.example.workbook.dto.BoardListReplyCountDTO;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
@@ -241,10 +242,25 @@ class BoardRepositoryTest {
     }
 
     @Transactional
-    @DisplayName("N+1 문제 확인을 위한 조회 테스트, @BatchSize 어노테이션을 Board domain의 BoardImage에 붙여 N번 쿼리를 모아서 한번에 실행시킬 수 있다.")
+    @DisplayName("N+1 문제 확인을 위한 조회 테스트, @BatchSize 어노테이션을 Board domain의" +
+            " BoardImage에 붙여 N번 쿼리를 모아서 한번에 실행시킬 수 있다.")
     @Test
     public void testSearchImageReplyCount() {
         PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("bno").descending());
         boardRepository.searchWithAll(null, null, pageRequest);
+    }
+    
+    @Transactional
+    @DisplayName("게시물 조회시 댓글 개수와 이미지를 같이 조회")
+    @Test
+    public void testSearchImageReplyCountAll() {
+        PageRequest pageRequest = PageRequest.of(0, 10, Sort.by("bno").descending());
+
+        Page<BoardListAllDTO> result = boardRepository.searchWithAll(null, null, pageRequest);
+
+        log.info("-------------------------------------------");
+        log.info(result.getTotalElements());
+
+        result.getContent().forEach(boardListAllDTO -> log.info(boardListAllDTO));
     }
 }

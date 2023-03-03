@@ -5,6 +5,14 @@ spring:
     password: 413730
     url: jdbc:mysql://127.0.0.1:3306/workbook?rewriteBatchedStatements=true&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
 
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+  thymeleaf:
+    cache: false
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -12,6 +20,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
   servlet:
     multipart:
       enabled: true

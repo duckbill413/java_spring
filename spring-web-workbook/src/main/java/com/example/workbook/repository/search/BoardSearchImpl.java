@@ -3,8 +3,12 @@ package com.example.workbook.repository.search;
 import com.example.workbook.domain.Board;
 import com.example.workbook.domain.QBoard;
 import com.example.workbook.domain.QReply;
+import com.example.workbook.dto.BoardImageDTO;
+import com.example.workbook.dto.BoardListAllDTO;
 import com.example.workbook.dto.BoardListReplyCountDTO;
+import com.example.workbook.repository.BoardRepository;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQuery;
 import org.springframework.data.domain.Page;
@@ -13,13 +17,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * author        : duckbill413
  * date          : 2023-02-25
  * description   :
  **/
-
 public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardSearch {
 
     public BoardSearchImpl() {
@@ -146,23 +150,71 @@ public class BoardSearchImpl extends QuerydslRepositorySupport implements BoardS
     }
 
     @Override
-    public Page<BoardListReplyCountDTO> searchWithAll(String[] types, String keyword, Pageable pageable) {
+    public Page<BoardListAllDTO> searchWithAll(String[] types, String keyword, Pageable pageable) {
         QBoard board = QBoard.board;
         QReply reply = QReply.reply;
 
         JPQLQuery<Board> boardJPQLQuery = from(board);
-        boardJPQLQuery.leftJoin(reply).on(reply.board.eq(board)); // left join
+        boardJPQLQuery.leftJoin(reply).on(reply.board.eq(board)); // 댓글 join
+
+        // 검색 조건 추가
+        if ((types != null && types.length > 0) &&
+                keyword != null) {// 검색 조건과 키워드가 있다면
+            BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+            for (String type : types) {
+                switch (type) {
+                    case "t":
+                        booleanBuilder.or(board.title.contains(keyword));
+                        break;
+                    case "c":
+                        booleanBuilder.or(board.content.contains(keyword));
+                        break;
+                    case "w":
+                        booleanBuilder.or(board.writer.contains(keyword));
+                        break;
+                }
+            }
+            // end for
+            boardJPQLQuery.where(booleanBuilder);
+        }// end if
+
+        boardJPQLQuery.groupBy(board);
 
         getQuerydsl().applyPagination(pageable, boardJPQLQuery); // paging
 
-        List<Board> boardList = boardJPQLQuery.fetch();
+        JPQLQuery<Tuple> tupleJPQLQuery = boardJPQLQuery.select(board, reply.countDistinct());
 
-        boardList.forEach(board1 -> {
-            System.out.println(board1.getBno());
-            System.out.println(board1.getImageSet());
-            System.out.println("--------------");
-        });
+        List<Tuple> tupleList = tupleJPQLQuery.fetch();
 
-        return null;
+        List<BoardListAllDTO> dtoList = tupleList.stream().map(tuple -> {
+            Board board1 = tuple.get(board);
+            long replyCount = tuple.get(1, Long.class);
+
+            BoardListAllDTO dto = BoardListAllDTO.builder()
+                    .bno(board1.getBno())
+                    .title(board1.getTitle())
+                    .writer(board1.getWriter())
+                    .regDate(board1.getRegDate())
+                    .replyCount(replyCount)
+                    .build();
+
+            // BoardImage를 BoardImageDTO 처리할 부분
+            List<BoardImageDTO> imageDTOS = board1.getImageSet().stream().sorted()
+                    .map(boardImage -> BoardImageDTO.builder()
+                            .uuid(boardImage.getUuid())
+                            .fileName(boardImage.getFileName())
+                            .ord(boardImage.getOrd())
+                            .build()
+                    ).collect(Collectors.toList());
+
+            dto.setBoardImages(imageDTOS);
+
+            return dto;
+        }).collect(Collectors.toList());
+
+        long totalCount = boardJPQLQuery.fetchCount();
+
+        return new PageImpl<>(dtoList, pageable, totalCount);
     }
 }

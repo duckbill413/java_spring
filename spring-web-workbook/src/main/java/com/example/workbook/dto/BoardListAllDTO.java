@@ -2,12 +2,10 @@ package com.example.workbook.dto;
 
 /**
  * author        : duckbill413
- * date          : 2023-02-26
+ * date          : 2023-03-03
  * description   :
  **/
 
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -20,17 +18,11 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardDTO {
+public class BoardListAllDTO {
     private Long bno;
-    @NotEmpty
-    @Size(min = 3, max = 100)
     private String title;
-    @NotEmpty
-    private String content;
-    @NotEmpty
     private String writer;
     private LocalDateTime regDate;
-    private LocalDateTime modDate;
-    // 첨부파일의 이름들
-    private List<String> fileNames;
+    private Long replyCount;
+    private List<BoardImageDTO> boardImages;
 }
