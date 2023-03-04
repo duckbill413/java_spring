@@ -20,6 +20,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    defer-datasource-initialization: true
 
   servlet:
     multipart:
@@ -27,6 +28,33 @@ spring:
       location: D:\\upload
       max-request-size: 30MB
       max-file-size: 10MB
+
+  security:
+    oauth2:
+      client:
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            user-name-attribute: id
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+        registration:
+          kakao:
+            client-name: kakao
+            authorization-grant-type: authorization_code
+            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            client-id: e8435cddee04055cd1bade598c5fdf10
+            client-secret: Ms3I3UjuwEdEIsERyipgSIzstRbjIBDt
+            client-authentication-method: POST
+            scope:
+              - profile_nickname
+              - account_email
+
+#logging:
+#  level:
+#    org.springframework: info
+#    com.example: debug
+#    org.springframework.security: trace
 
 com.example.workbook.path: D:\\upload
 

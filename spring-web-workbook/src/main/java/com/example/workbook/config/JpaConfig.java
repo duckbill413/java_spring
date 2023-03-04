@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
  * date          : 2023-02-25
  * description   :
  **/
-//@EnableJpaAuditing
+@EnableJpaAuditing
 @Configuration
 public class JpaConfig {
 }

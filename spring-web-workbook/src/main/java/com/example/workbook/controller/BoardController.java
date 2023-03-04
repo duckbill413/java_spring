@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -51,11 +52,11 @@ public class BoardController {
         model.addAttribute("responseDTO", responseDTO);
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/register")
     public void registerGET() {
 
     }
-
     @PostMapping("/register")
     @Operation(summary = "Board 등록", description = "새로운 게시물을 등록합니다.")
     public String registerPost(@Valid BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
@@ -75,7 +76,7 @@ public class BoardController {
 
         return "redirect:/board/list";
     }
-
+    @PreAuthorize("isAuthenticated()")
     @GetMapping({"/read", "/modify"})
     public void read(Long bno, PageRequestDTO pageRequestDTO, Model model) {
         log.info("call");
@@ -93,12 +94,14 @@ public class BoardController {
      * 수정 후 조회화면을 이동했을 때 검색했던 조건이 해당하지 않을 수 있다. 이 떄문에 안전하게 구현하기 위해서 단순 조회 화면으로 이동하도록 구현
      * modify에서 문제 발생시 errors를 이용해 다시 수정페이지로 이동한다.
      *
+     * 게시물 수정 작업은 현재 로그인 사용자와 작성자가 일치할 때만 수정/삭제 가능
      * @param pageRequestDTO     the page request dto
      * @param boardDTO           the board dto
      * @param bindingResult      the binding result
      * @param redirectAttributes the redirect attributes
      * @return the string
      */
+    @PreAuthorize("principal.username == #boardDTO.writer")
     @PostMapping("/modify")
     public String modify(PageRequestDTO pageRequestDTO, @Valid BoardDTO boardDTO, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         log.info("board modify post.........." + boardDTO);
@@ -126,6 +129,7 @@ public class BoardController {
 //        redirectAttributes.addFlashAttribute("result", "removed");
 //        return "redirect:/board/list";
 //    }
+    @PreAuthorize("princial.username == #boardDTO.writer")
     @PostMapping("/remove")
     public String remove(BoardDTO boardDTO, RedirectAttributes redirectAttributes) {
         Long bno = boardDTO.getBno();

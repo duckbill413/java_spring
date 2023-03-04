@@ -34,6 +34,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.2.0'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:3.0.3'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
     // swagger - springdoc
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
     implementation 'org.springdoc:springdoc-openapi-starter-common:2.0.2'
@@ -49,10 +50,12 @@ dependencies {
     // QueryDsl 설정
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
     annotationProcessor "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta"
-
     annotationProcessor "jakarta.persistence:jakarta.persistence-api"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"
-
+    // spring security
+    implementation 'org.springframework.boot:spring-boot-starter-security:3.0.3'
+    // security oauth2
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:3.0.3'
 }
 
 tasks.named('test') {
