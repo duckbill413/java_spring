@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            font-size: 16px;
+            font-family: Consolas, sans-serif;
+        }
+    </style>
+</head>
+<body>
+<form>
+    <input type="text" id="mid" size="20">
+    <input type="password" id="mpw" size="20"><br><br>
+    <button type="button" class="btn1">generateToken</button>
+</form>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js">
+
+</script>
+
+<script>
+    document.querySelector(".btn1").addEventListener("click", () => {
+        const id = document.getElementById('mid').value
+        const pw = document.getElementById('mpw').value
+
+        const data = {mid: id, mpw: pw}
+
+        axios.post("http://localhost:8080/generateToken", data)
+    }, false)
+</script>
+</body>
+</html>
