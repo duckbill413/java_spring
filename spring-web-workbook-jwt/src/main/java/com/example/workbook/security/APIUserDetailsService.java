@@ -23,7 +23,7 @@ import java.util.Optional;
 @Log4j2
 @RequiredArgsConstructor
 public class APIUserDetailsService implements UserDetailsService {
-    private APIUserRepository apiUserRepository;
+    private final APIUserRepository apiUserRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 

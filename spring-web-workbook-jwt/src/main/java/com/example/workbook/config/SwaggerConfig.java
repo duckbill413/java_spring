@@ -3,6 +3,8 @@ package com.example.workbook.config;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,13 +15,13 @@ import org.springframework.context.annotation.Configuration;
  **/
 @Configuration
 public class SwaggerConfig {
-    private final String JWT = "JWT";
-    @Bean
-    public OpenAPI openAPI(){
-        return new OpenAPI()
-                .components(new Components())
-                .info(this.info());
-    }
+    private final String JWT_SCHEMA = "Authorization";
+//    @Bean
+//    public OpenAPI openAPI(){
+//        return new OpenAPI()
+//                .components(new Components())
+//                .info(this.info());
+//    }
 
     private Info info(){
         Info info = new Info()
@@ -29,12 +31,12 @@ public class SwaggerConfig {
         return info;
     }
 
-    /* Swagger JWT 적용
+    // Swagger JWT 적용
     @Bean
     public OpenAPI openAPI() {
-        SecurityRequirement securityRequirement = new SecurityRequirement().addList(JWT); // 헤더에 토큰 포함
-        Components components = new Components().addSecuritySchemes(jwt, new SecurityScheme()
-                .name(JWT)
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList(JWT_SCHEMA); // 헤더에 토큰 포함
+        Components components = new Components().addSecuritySchemes(JWT_SCHEMA, new SecurityScheme()
+                .name(JWT_SCHEMA)
                 .type(SecurityScheme.Type.HTTP)
                 .scheme("bearer")
                 .bearerFormat("JWT")
@@ -45,6 +47,4 @@ public class SwaggerConfig {
                 .addSecurityItem(securityRequirement)
                 .components(components);
     }
-
-     */
 }
