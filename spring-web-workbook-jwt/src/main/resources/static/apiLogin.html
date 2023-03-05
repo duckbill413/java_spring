@@ -25,10 +25,16 @@
     document.querySelector(".btn1").addEventListener("click", () => {
         const id = document.getElementById('mid').value
         const pw = document.getElementById('mpw').value
-
         const data = {mid: id, mpw: pw}
 
         axios.post("http://localhost:8080/generateToken", data)
+            .then(res => {
+                const accessToken = res.data.accessToken
+                const refreshToken = res.data.refreshToken
+
+                localStorage.setItem("accessToken", accessToken)
+                localStorage.setItem("refreshToken", refreshToken)
+            })
     }, false)
 </script>
 </body>
