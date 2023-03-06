@@ -2,6 +2,7 @@ package com.example.workbook.config;
 
 import com.example.workbook.security.APIUserDetailsService;
 import com.example.workbook.security.filter.APILoginFilter;
+import com.example.workbook.security.filter.RefreshTokenFilter;
 import com.example.workbook.security.filter.TokenCheckFilter;
 import com.example.workbook.security.handler.APILoginSuccessHandler;
 import com.example.workbook.util.JWTUtil;
@@ -59,6 +60,9 @@ public class CustomSecurityConfig {
                 tokenCheckFilter(jwtUtil),
                 UsernamePasswordAuthenticationFilter.class
         );
+        //         RefreshToken
+        http.addFilterBefore(new RefreshTokenFilter("/refreshToken",
+                jwtUtil), TokenCheckFilter.class);
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
