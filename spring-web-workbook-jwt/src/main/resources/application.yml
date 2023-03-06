@@ -33,3 +33,8 @@ springdoc:
 key:
   workbook:
     jwt.secret: o8TaeVoSDlxsfpYYFtpNElEPhMp7MvvrSnYQYgKrylMBNGPDqE
+jwt:
+  expire:
+    access: 1
+    refresh: 30
+    day: 3

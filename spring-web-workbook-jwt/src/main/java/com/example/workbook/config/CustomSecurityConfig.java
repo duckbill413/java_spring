@@ -60,11 +60,10 @@ public class CustomSecurityConfig {
                 tokenCheckFilter(jwtUtil),
                 UsernamePasswordAuthenticationFilter.class
         );
-//         RefreshToken
-//        http.addFilterBefore(new RefreshTokenFilter("/refreshToken",
-//                jwtUtil), TokenCheckFilter.class);
+        //         RefreshToken
+        http.addFilterBefore(new RefreshTokenFilter("/refreshToken",
+                jwtUtil), TokenCheckFilter.class);
         http.csrf().disable();
-        http.cors().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
     }
