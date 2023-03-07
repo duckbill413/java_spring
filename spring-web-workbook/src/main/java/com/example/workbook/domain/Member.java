@@ -1,11 +1,10 @@
-package com.example.workbook.dto;
+package com.example.workbook.domain;
 
 /**
  * author        : duckbill413
  * date          : 2023-03-04
  * description   :
  **/
-import com.example.workbook.domain.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

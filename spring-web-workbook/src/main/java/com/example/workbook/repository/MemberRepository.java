@@ -1,6 +1,6 @@
 package com.example.workbook.repository;
 
-import com.example.workbook.dto.Member;
+import com.example.workbook.domain.Member;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

@@ -29,12 +29,9 @@ import java.util.Map;
 @Log4j2
 @RequiredArgsConstructor
 public class RefreshTokenFilter extends OncePerRequestFilter {
-    @Value("${jwt.expire.access}")
-    private int ACCESS_EXPIRE_DATE;
-    @Value("${jwt.expire.refresh}")
-    private int REFRESH_EXPIRE_DATE;
-    @Value("${jwt.expire.day}")
-    private int EXPIRE_DAY;
+    private final int ACCESS_EXPIRE_DATE;
+    private final int REFRESH_EXPIRE_DATE;
+    private final int EXPIRE_DAY;
     private final String refreshPath;
     private final JWTUtil jwtUtil;
 

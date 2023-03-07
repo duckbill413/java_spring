@@ -23,10 +23,8 @@ import java.util.Map;
 @Log4j2
 @RequiredArgsConstructor
 public class APILoginSuccessHandler implements AuthenticationSuccessHandler {
-    @Value("${jwt.expire.access}")
-    private int ACCESS_EXPIRE_DATE;
-    @Value("${jwt.expire.refresh}")
-    private int REFRESH_EXPIRE_DATE;
+    private final int ACCESS_EXPIRE_DATE;
+    private final int REFRESH_EXPIRE_DATE ;
     private final JWTUtil jwtUtil;
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

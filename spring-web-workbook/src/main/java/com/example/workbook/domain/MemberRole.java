@@ -1,4 +1,4 @@
-package com.example.workbook.dto;
+package com.example.workbook.domain;
 
 /**
  * author        : duckbill413

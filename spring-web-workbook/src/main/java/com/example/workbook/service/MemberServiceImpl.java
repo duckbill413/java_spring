@@ -1,8 +1,8 @@
 package com.example.workbook.service;
 
-import com.example.workbook.dto.Member;
+import com.example.workbook.domain.Member;
 import com.example.workbook.dto.MemberJoinDTO;
-import com.example.workbook.dto.MemberRole;
+import com.example.workbook.domain.MemberRole;
 import com.example.workbook.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
