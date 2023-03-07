@@ -1,7 +1,7 @@
 package com.example.workbook.repository;
 
-import com.example.workbook.dto.Member;
-import com.example.workbook.dto.MemberRole;
+import com.example.workbook.domain.Member;
+import com.example.workbook.domain.MemberRole;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,8 +12,6 @@ import org.springframework.test.annotation.Commit;
 
 import java.util.Optional;
 import java.util.stream.IntStream;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * author        : duckbill413

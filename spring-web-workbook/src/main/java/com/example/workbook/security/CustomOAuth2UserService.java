@@ -1,7 +1,7 @@
 package com.example.workbook.security;
 
-import com.example.workbook.dto.Member;
-import com.example.workbook.dto.MemberRole;
+import com.example.workbook.domain.Member;
+import com.example.workbook.domain.MemberRole;
 import com.example.workbook.repository.MemberRepository;
 import com.example.workbook.security.dto.MemberSecurityDTO;
 import lombok.RequiredArgsConstructor;

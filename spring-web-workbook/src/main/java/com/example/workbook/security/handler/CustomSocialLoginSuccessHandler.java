@@ -1,6 +1,5 @@
 package com.example.workbook.security.handler;
 
-import com.example.workbook.dto.Member;
 import com.example.workbook.security.dto.MemberSecurityDTO;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
