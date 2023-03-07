@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * author        : duckbill413
@@ -27,16 +28,17 @@ public class APIUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Optional<APIUser> result = apiUserRepository.findById(username);
+        Optional<APIUser> result = apiUserRepository.getWithRoles(username);
 
         APIUser apiUser = result.orElseThrow(() -> new UsernameNotFoundException("Cannot find mid"));
 
         APIUserDTO dto = new APIUserDTO(
                 apiUser.getMid(),
                 apiUser.getMpw(),
-                List.of(new SimpleGrantedAuthority("ROLE_USER"))
+                apiUser.getRoleSet().stream().map(apiUserRole ->
+                        new SimpleGrantedAuthority("ROLE_"+apiUserRole.name())).collect(Collectors.toList())
         );
-
+        log.info(dto);
         return dto;
     }
 }

@@ -50,7 +50,7 @@ public class TodoController {
     }
     @PutMapping(value = "/{tno}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, String> modify(@PathVariable("tno") Long tno, @RequestBody TodoDTO todoDTO) {
-        // 잘못된 tno가 발생하지 못하도록
+        // 잘못된 tno 가 발생하지 못하도록
         todoDTO.setTno(tno);
 
         todoService.modify(todoDTO);
