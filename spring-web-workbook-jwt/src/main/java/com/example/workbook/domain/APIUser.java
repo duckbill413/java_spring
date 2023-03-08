@@ -23,11 +23,17 @@ public class APIUser {
     @Id
     private String mid;
     private String mpw;
+    private String email;
+    private boolean deleted;
+    private boolean social;
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private Set<APIUserRole> roleSet = new HashSet<>();
     public void changePw(String mpw){
         this.mpw = mpw;
+    }
+    public void addRole(APIUserRole apiUserRole){
+        this.roleSet.add(apiUserRole);
     }
 }

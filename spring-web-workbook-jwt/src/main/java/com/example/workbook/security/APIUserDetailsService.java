@@ -27,6 +27,7 @@ public class APIUserDetailsService implements UserDetailsService {
     private final APIUserRepository apiUserRepository;
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.info("-------------------APIUserDetailsService-----------------------");
 
         Optional<APIUser> result = apiUserRepository.getWithRoles(username);
 

@@ -27,6 +27,7 @@ public class APILoginFilter extends AbstractAuthenticationProcessingFilter {
     }
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+        log.info("-------------------APILoginFilter-----------------------");
 
         if(request.getMethod().equalsIgnoreCase("GET")){
             log.info("GET METHOD NOT SUPPORT");
@@ -49,7 +50,7 @@ public class APILoginFilter extends AbstractAuthenticationProcessingFilter {
     }
 
     private Map<String, String> parseRequestJSON(HttpServletRequest request){
-        // JSON 데이터를 분석해서 mid, mpw 전달 값을 Map으로 처리
+        // JSON 데이터를 분석해서 mid, mpw 전달 값을 Map 으로 처리
         try(Reader reader = new InputStreamReader(request.getInputStream())) {
             Gson gson = new Gson();
 

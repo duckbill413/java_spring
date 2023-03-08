@@ -18,4 +18,7 @@ public interface APIUserRepository extends JpaRepository<APIUser, String> {
     @EntityGraph(attributePaths = "roleSet")
     @Query("select u from APIUser u where u.mid = :mid")
     Optional<APIUser> getWithRoles(@Param("mid") String mid);
+
+    @EntityGraph(attributePaths = "roleSet")
+    Optional<APIUser> findByMid(@Param("mid") String mid);
 }

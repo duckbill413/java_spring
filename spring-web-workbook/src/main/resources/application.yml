@@ -50,6 +50,7 @@ spring:
               - profile_nickname
               - account_email
 
+
 #logging:
 #  level:
 #    org.springframework: info

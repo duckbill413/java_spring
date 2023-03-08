@@ -1,10 +1,12 @@
 package com.example.workbook.config;
 
 import com.example.workbook.security.APIUserDetailsService;
+import com.example.workbook.security.CustomOauth2UserService;
 import com.example.workbook.security.filter.APILoginFilter;
 import com.example.workbook.security.filter.RefreshTokenFilter;
 import com.example.workbook.security.filter.TokenCheckFilter;
 import com.example.workbook.security.handler.APILoginSuccessHandler;
+import com.example.workbook.security.handler.CustomSocialLoginSuccessHandler;
 import com.example.workbook.util.JWTUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -23,6 +25,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -45,6 +48,7 @@ public class CustomSecurityConfig {
     private int REFRESH_EXPIRE_DATE = 30;
     private int EXPIRE_DAY = 3;
     private final APIUserDetailsService apiUserDetailsService;
+//    private final CustomOauth2UserService customOauth2UserService;
     private final JWTUtil jwtUtil;
 
     @Bean
@@ -69,10 +73,10 @@ public class CustomSecurityConfig {
         apiLoginFilter.setAuthenticationSuccessHandler(successHandler);
 
 
-        //APILoginFilter의 위치 조정
+        //APILoginFilter 의 위치 조정
         http.addFilterBefore(apiLoginFilter, UsernamePasswordAuthenticationFilter.class);
 
-        //api로 시작하는 모든 경로는 TokenCheckFilter 동작
+        //api 로 시작하는 모든 경로는 TokenCheckFilter 동작
         http.addFilterBefore(
                 tokenCheckFilter(jwtUtil, apiUserDetailsService),
                 UsernamePasswordAuthenticationFilter.class
@@ -82,15 +86,23 @@ public class CustomSecurityConfig {
         http.addFilterBefore(new RefreshTokenFilter(ACCESS_EXPIRE_DATE, REFRESH_EXPIRE_DATE, EXPIRE_DAY,
                 "/refreshToken", jwtUtil),
                 TokenCheckFilter.class);
-
+        // csrf 보안
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        // cors 보안
+        http.cors(httpSecurityCorsConfigurer ->
+                httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource()));
 
-        http.cors(httpSecurityCorsConfigurer -> {
-            httpSecurityCorsConfigurer.configurationSource(corsConfigurationSource());
-        });
+        // 소셜 로그인
+        http.oauth2Login()
+                .successHandler(authenticationSuccessHandler());
 
         return http.build();
+    }
+    @Bean
+    public AuthenticationSuccessHandler authenticationSuccessHandler(){
+        return new CustomSocialLoginSuccessHandler(ACCESS_EXPIRE_DATE, REFRESH_EXPIRE_DATE,
+                jwtUtil, passwordEncoder());
     }
 
     private TokenCheckFilter tokenCheckFilter(JWTUtil jwtUtil, APIUserDetailsService apiUserDetailsService) {

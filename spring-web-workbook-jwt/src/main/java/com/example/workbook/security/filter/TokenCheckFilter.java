@@ -33,6 +33,7 @@ public class TokenCheckFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        log.info("-------------------TokenCheckFilter-----------------------");
         String path = request.getRequestURI();
 
         if (!path.startsWith("/api/")) {
