@@ -36,4 +36,7 @@ public class APIUser {
     public void addRole(APIUserRole apiUserRole){
         this.roleSet.add(apiUserRole);
     }
+    public void changeEmail(String email){
+        this.email = email;
+    }
 }

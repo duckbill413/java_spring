@@ -19,11 +19,20 @@ import java.util.Collection;
 public class APIUserDTO extends User {
     private String mid;
     private String mpw;
+    private String email;
+    private boolean deleted;
+    private boolean social;
 
-    public APIUserDTO(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+    public APIUserDTO(String username, String password,
+                      String email,
+                      boolean deleted, boolean social,
+                      Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
 
         this.mid = username;
         this.mpw = password;
+        this.email = email;
+        this.deleted = deleted;
+        this.social = social;
     }
 }

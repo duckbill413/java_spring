@@ -47,8 +47,6 @@ public class SampleController {
         log.info("isAuthenticated: " + authentication.isAuthenticated());
         log.info("principal: " + authentication.getPrincipal());
         log.info("authorities: " + authentication.getAuthorities());
-        log.info("details: " + authentication.getDetails());
-        log.info("credentials: " + authentication.getCredentials());
 
         return ResponseEntity.ok().body(apiUserRepository.findById(authentication.getName()).orElseThrow());
     }

@@ -16,12 +16,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
     private final String JWT_SCHEMA = "Authorization";
-//    @Bean
-//    public OpenAPI openAPI(){
-//        return new OpenAPI()
-//                .components(new Components())
-//                .info(this.info());
-//    }
 
     private Info info(){
         Info info = new Info()

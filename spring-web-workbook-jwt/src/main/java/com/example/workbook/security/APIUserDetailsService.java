@@ -36,6 +36,9 @@ public class APIUserDetailsService implements UserDetailsService {
         APIUserDTO dto = new APIUserDTO(
                 apiUser.getMid(),
                 apiUser.getMpw(),
+                apiUser.getEmail(),
+                apiUser.isDeleted(),
+                apiUser.isSocial(),
                 apiUser.getRoleSet().stream().map(apiUserRole ->
                         new SimpleGrantedAuthority("ROLE_"+apiUserRole.name())).collect(Collectors.toList())
         );

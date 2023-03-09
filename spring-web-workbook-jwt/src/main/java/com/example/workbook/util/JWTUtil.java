@@ -23,8 +23,6 @@ public class JWTUtil {
     private String key;
 
     public String generateToken(Map<String, Object> valueMap, int days){
-        log.info("generate key: " + key);
-
         // header
         Map<String, Object> headers = new HashMap<>();
         headers.put("typ", "JWT");
