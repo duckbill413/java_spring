@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalControllerAdvice {
     /**
-     * 예외 처리 되지 않은 모든 에러의 경우
+     * 예외 처리 되지 않은 모든 에러 처리
      *
      * @param e Exception
-     * @return ResponseEntity<ErrorResponse></ErrorResponse>
+     * @return ResponseEntity
      */
     @ExceptionHandler({Exception.class})
     protected ResponseEntity<ErrorResponse> handleAllExceptions(Exception e) {

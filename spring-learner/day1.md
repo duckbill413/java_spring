@@ -39,7 +39,7 @@ domain간 강한 결합을 방지하기 위해서 사용되는 패키지 구조
 ## JDK 17
 1. switch 문의 변경
 2. record class
-3. var type
+3. var type (java 10)
 4. multiline String
 5. String method
    - `isBlank`: 문자열이 비어 있거나 공백이면 `true`반환
