@@ -8,6 +8,7 @@
 package com.example.learner.domain.menu.api;
 
 import com.example.learner.domain.menu.application.MenuService;
+import com.example.learner.domain.menu.dto.request.InsertMenuDto;
 import com.example.learner.domain.menu.dto.request.InsertMenus;
 import com.example.learner.domain.menu.dto.response.MenuInfo;
 import com.example.learner.global.common.BaseResponse;
@@ -32,22 +33,32 @@ public class MenuController {
     private final MenuService menuService;
 
     @Operation(
-            summary = "메뉴 추가",
+            summary = "메뉴 여러개 추가",
             responses = {
                     @ApiResponse(responseCode = "200", description = "메뉴 추가 성공", content = @Content(schema = @Schema(hidden = true))),
                     @ApiResponse(responseCode = "404", description = "메뉴 추가 실패", content = @Content(schema = @Schema(implementation = ErrorResponse.class)))
             }
     )
-    @PostMapping("")
+    @PostMapping("/dozen")
     public ResponseEntity<BaseResponse<String>> insertMenus(
             @RequestBody InsertMenus menusDto
     ) {
-        menuService.insertMenu(menusDto);
+        var result = menuService.insertMenus(menusDto);
         return BaseResponse.success(
                 SuccessCode.INSERT_SUCCESS,
-                "메뉴 추가 성공"
+                String.format("메뉴 %s개 추가 성공", result)
         );
     }
+
+    @PostMapping("")
+    public ResponseEntity<BaseResponse<MenuInfo>> insertMenu(@RequestBody InsertMenuDto menuDto) {
+        var result = menuService.insertMenu(menuDto);
+        return BaseResponse.success(
+                SuccessCode.INSERT_SUCCESS,
+                result
+        );
+    }
+
     @Operation(
             summary = "메뉴 조회",
             description = "메뉴 Id를 이용한 메뉴 정보 조회",

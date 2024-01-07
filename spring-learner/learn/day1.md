@@ -202,6 +202,28 @@ domain간 강한 결합을 방지하기 위해서 사용되는 패키지 구조
 # Record class
 - DTO 클래스로 주로 사용
 
+일반적인 DTO 클래스
+```java
+public class Person {
+    private final String name;
+    private final int age;
+
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+}
+```
+
+Record class로 변경된 DTO 클래스
 ```java
 public record Person(String name, int age) {
     // 자동으로 생성된 생성자, 게터, equals(), hashCode(), toString() 메서드가 포함됨
