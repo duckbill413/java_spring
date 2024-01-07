@@ -70,9 +70,10 @@ public enum ErrorCode {
     EXPIRED_REFRESH_TOKEN_EXCEPTION(403, "B103", "만료된 REFRESH TOKEN 입니다."),
     INCONSISTENT_REFRESH_TOKEN_EXCEPTION(403, "B104", "일치하지 않는 REFRESH TOKEN 입니다."),
 
-    // 유저가 존재하지 않음 (CODE: 100)
+    // 유저가 존재하지 않음 (CODE: 200)
     NOT_FOUND_USER_EXCEPTION(404, "B200", "존재하지 않는 유저입니다."),
-
+    // 메뉴가 존재하지 않음 (CODE: 300)
+    NOT_FOUND_MENU_EXCEPTION(404, "B300", "존재하지 않는 메뉴 입니다."),
     ; // End
 
     /**
