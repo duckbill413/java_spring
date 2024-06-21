@@ -11,6 +11,10 @@ public interface LowestPriceService {
 
     int setNewProduct(Product newProduct);
 
+    Set GetZsetValueWithStatus(String key) throws Exception;
+
+    Set GetZsetValueWithSpecificException(String key) throws Exception;
+
     int setNewProductGrp(ProductGrp newProductGrp);
 
     int setNewProductGrpToKeyword(String keyword, String prodGrpId, double score);
