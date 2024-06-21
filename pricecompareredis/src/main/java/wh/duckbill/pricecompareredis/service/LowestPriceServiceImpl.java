@@ -3,14 +3,16 @@ package wh.duckbill.pricecompareredis.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import wh.duckbill.pricecompareredis.vo.Keyword;
 import wh.duckbill.pricecompareredis.vo.Product;
+import wh.duckbill.pricecompareredis.vo.ProductGrp;
 
 import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class LowestPriceServiceImpl implements LowestPriceService {
-    private final RedisTemplate myProdPriceRedis;
+    private final RedisTemplate<String, Object> myProdPriceRedis;
 
     /**
      * ZSet에 저장된 정보를 조회
@@ -41,5 +43,22 @@ public class LowestPriceServiceImpl implements LowestPriceService {
     public int setNewProduct(Product newProduct) {
         myProdPriceRedis.opsForZSet().add(newProduct.getProductGrpId(), newProduct.getProductId(), newProduct.getPrice());
         return myProdPriceRedis.opsForZSet().rank(newProduct.getProductGrpId(), newProduct.getProductId()).intValue();
+    }
+
+    @Override
+    public int setNewProductGrp(ProductGrp newProductGrp) {
+        newProductGrp.getProductList().forEach(product -> myProdPriceRedis.opsForZSet().add(newProductGrp.getProdGrpId(), product.getProductId(), product.getPrice()));
+        return myProdPriceRedis.opsForZSet().zCard(newProductGrp.getProdGrpId()).intValue();
+    }
+
+    @Override
+    public int setNewProductGrpToKeyword(String keyword, String prodGrpId, double score) {
+        myProdPriceRedis.opsForZSet().add(keyword, prodGrpId, score);
+        return myProdPriceRedis.opsForZSet().rank(keyword, prodGrpId).intValue();
+    }
+
+    @Override
+    public Keyword getLowestPriceProductByKeyword(String keyword) {
+        return null;
     }
 }
