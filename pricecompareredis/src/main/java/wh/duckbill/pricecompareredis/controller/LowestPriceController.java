@@ -12,7 +12,6 @@ import wh.duckbill.pricecompareredis.vo.NotFoundException;
 import wh.duckbill.pricecompareredis.vo.Product;
 import wh.duckbill.pricecompareredis.vo.ProductGrp;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @RestController
@@ -47,15 +46,12 @@ public class LowestPriceController {
 
     @GetMapping("/product3")
     public ResponseEntity<Set> GetZsetValueUsingExControllerWithSpecificException(String key) throws Exception {
-        Set<String> mySet = new HashSet<>();
         try {
-            mySet = lowestPriceService.GetZsetValueWithSpecificException(key);
+            Set mySet = lowestPriceService.GetZsetValueWithSpecificException(key);
+            return new ResponseEntity<>(mySet, new HttpHeaders(), HttpStatus.OK);
         } catch (NotFoundException ex) {
             throw new Exception(ex);
         }
-        HttpHeaders responseHeaders = new HttpHeaders();
-
-        return new ResponseEntity<>(mySet, responseHeaders, HttpStatus.OK);
     }
 
     @PutMapping("/product")
